@@ -1,0 +1,123 @@
+<html>
+
+<head>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/clappr@latest/dist/clappr.min.js"></script>
+
+<!--
+  https://www.youtube.com/watch?v=WDZ49Tweb0c
+-->
+</head>
+
+<body>
+  <div id="menu"> 
+   <h1>Menu</h1>
+  </div>
+  <script>
+    var files = $.getJSON("test.JSON", function (files)
+    //xhr.open("GET", "https://cors-escape.herokuapp.com/https://maximum.blog/@shalvah/posts"); // reverse cors service
+    {
+      var menu = document.getElementsByTagName("menu");
+      var body = document.getElementsByTagName("BODY")[0];
+      var numberOfFiles = 0;
+      console.log(files.seasons.length);
+      for (var a = 0; a < files.seasons.length; a++) {
+
+        // REMOVE THIS 
+        if (a == 0) {
+          continue; // skip 2018 until cors issue is found/fixed
+        }
+        // REMOVE THIS 
+
+        
+        if (files.seasons[a].events == null) {
+          continue;
+        }
+
+        // CREATE SEASON DIV
+        var seasonDIV = document.createElement("ul");
+        seasonDIV.innerHTML = files.seasons[a].Name;
+        body.appendChild(seasonDIV);
+        // CREATE SEASON DIV
+        console.log(files.seasons[a].Name);
+
+        for (var b = 0; b < files.seasons[a].events.length; b++) {
+          if (files.seasons[a].events[b].sessions == null) {
+            continue;
+          }
+          console.log("     " + files.seasons[a].events[b].Name);
+          for (var c = 0; c < files.seasons[a].events[b].sessions.length; c++) {
+            if (files.seasons[a].events[b].sessions[c].perspectives == null) {
+              continue;
+            }
+            console.log("           " + files.seasons[a].events[b].sessions[c].Name);
+
+            for (var d = 0; d < files.seasons[a].events[b].sessions[c].perspectives.length; d++) {
+              console.log("                 " + files.seasons[a].events[b].sessions[c].perspectives[d].path);
+              
+              //IF EMPTY BUTTON // NEEDS CHANGED
+              if (files.seasons[a].events[b].sessions[c].perspectives[d].path.length < 10) {
+                continue;
+              }
+              //IF EMPTY BUTTON
+
+              numberOfFiles++;
+              var button = document.createElement("button");
+              button.innerHTML = files.seasons[a].events[b].sessions[c].perspectives[d].path;
+              button.value = button.innerHTML;
+              var last;
+              if (!button.value.includes("Pre-Season")&& !button.value.includes("F2")&&button.value.includes("/Main Feed.m3u8")) { // should give last main feed
+                last = button.value;
+              }
+              //body.appendChild(button);
+              button.addEventListener("click", function () {
+                changeSource(this.value)
+              })
+
+            }
+          }
+        }
+      }
+      console.log(numberOfFiles);
+
+      // if season not exists add to body
+      // if event doesn't exist in season add to season
+      // if session doesn't exist in event add to event
+      // add button to event
+      // var button = document.createElement("button");
+      // button.innerHTML = files.files[i].path
+      // button.value = files.files[i].path
+      // var path = files.files[i].path
+      // var body = document.getElementsByTagName("body")[0];
+      // body.appendChild(button);
+      // button.addEventListener("click", function () {
+      //   changeSource(this.value)
+      // })
+      changeSource(last);
+    })
+
+  </script>
+  </script>
+  <div id="player"></div>
+  <script>
+
+    var player = new Clappr.Player({
+      parentId: "#player",
+      autoPlay: true,
+    });
+  </script>
+  <script>
+    function changeSource(sourceString) {
+      console.log("Switching to : " + sourceString)
+      console.log(player.core.getCurrentPlayback().name);
+      player.configure({
+
+        source: sourceString,
+        autoPlay: true,
+
+      })
+    }
+
+  </script>
+</body>
+
+</html>
