@@ -41,6 +41,7 @@
       var seasonTitle = document.createElement("h2");
       seasonTitle.innerHTML = files.seasons[a].Name;
       seasonDiv.appendChild(seasonTitle);
+      seasonDiv.setAttribute('class','season');
       menu.appendChild(seasonDiv);
       // CREATE SEASON DIV
       console.log(files.seasons[a].Name);
@@ -57,6 +58,7 @@
         var eventTitle = document.createElement("h3");
         eventTitle.innerHTML = files.seasons[a].events[b].Name;
         eventDiv.appendChild(eventTitle);
+        eventDiv.setAttribute('class','event');
         seasonDiv.appendChild(eventDiv);
         // CREATE EVENT DIV
 
@@ -76,6 +78,7 @@
         var sessionTitle = document.createElement("h4");
         sessionTitle.innerHTML = files.seasons[a].events[b].sessions[c].Name;
         sessionDiv.appendChild(sessionTitle);
+        sessionDiv.setAttribute('class','session');
         eventDiv.appendChild(sessionDiv);
         // CREATE SESSION DIV
 
