@@ -3,121 +3,137 @@
 <head>
   <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/clappr@latest/dist/clappr.min.js"></script>
 
-<!--
+  <!--
   https://www.youtube.com/watch?v=WDZ49Tweb0c
 -->
 </head>
 
-<body>
-  <div id="menu"> 
-   <h1>Menu</h1>
-  </div>
-  <script>
-    var files = $.getJSON("test.JSON", function (files)
-    //xhr.open("GET", "https://cors-escape.herokuapp.com/https://maximum.blog/@shalvah/posts"); // reverse cors service
-    {
-      var menu = document.getElementsByTagName("menu");
-      var body = document.getElementsByTagName("BODY")[0];
-      var numberOfFiles = 0;
-      console.log(files.seasons.length);
-      for (var a = 0; a < files.seasons.length; a++) {
 
-        // REMOVE THIS 
-        if (a == 0) {
-          continue; // skip 2018 until cors issue is found/fixed
-        }
-        // REMOVE THIS 
+<script>
+  var files = $.getJSON("test.JSON", function (files)
+  //xhr.open("GET", "https://cors-escape.herokuapp.com/https://maximum.blog/@shalvah/posts"); // reverse cors service
+  {
 
-        
-        if (files.seasons[a].events == null) {
+    var body = document.getElementsByTagName("BODY")[0];
+    var menu = document.createElement("div");
+    var title = document.createElement("h1");
+    title.innerHTML = "Menu";
+    menu.appendChild(title);
+    body.appendChild(menu);
+    var numberOfFiles = 0;
+    console.log(files.seasons.length);
+    for (var a = 0; a < files.seasons.length; a++) { // for all seasons 
+
+      // REMOVE THIS 
+      if (a == 0) {
+        continue; // skip 2018 until cors issue is found/fixed
+      }
+      // REMOVE THIS 
+
+
+      if (files.seasons[a].events == null) { // if no events in this season go to next season
+        continue;
+      }
+
+      // CREATE SEASON DIV
+      var seasonDiv = document.createElement("div");
+      //seasonDiv.innerHTML = files.seasons[a].Name;
+      var seasonTitle = document.createElement("h2");
+      seasonTitle.innerHTML = files.seasons[a].Name;
+      seasonDiv.appendChild(seasonTitle);
+      menu.appendChild(seasonDiv);
+      // CREATE SEASON DIV
+      console.log(files.seasons[a].Name);
+
+
+
+      for (var b = 0; b < files.seasons[a].events.length; b++) { // for all events 
+        if (files.seasons[a].events[b].sessions == null) { // if event has no sessions go to next event
           continue;
         }
+        // CREATE EVENT DIV
+        var eventDiv = document.createElement("div");
+        //eventDiv.innerHTML = files.seasons[a].events[b].Name;
+        var eventTitle = document.createElement("h3");
+        eventTitle.innerHTML = files.seasons[a].events[b].Name;
+        eventDiv.appendChild(eventTitle);
+        seasonDiv.appendChild(eventDiv);
+        // CREATE EVENT DIV
 
-        // CREATE SEASON DIV
-        var seasonDIV = document.createElement("ul");
-        seasonDIV.innerHTML = files.seasons[a].Name;
-        body.appendChild(seasonDIV);
-        // CREATE SEASON DIV
-        console.log(files.seasons[a].Name);
 
-        for (var b = 0; b < files.seasons[a].events.length; b++) {
-          if (files.seasons[a].events[b].sessions == null) {
+
+
+        for (var c = 0; c < files.seasons[a].events[b].sessions.length; c++) { // for all sessions
+          if (files.seasons[a].events[b].sessions[c].perspectives == null) { // if session has no perspectives go to next session
             continue;
           }
-          console.log("     " + files.seasons[a].events[b].Name);
-          for (var c = 0; c < files.seasons[a].events[b].sessions.length; c++) {
-            if (files.seasons[a].events[b].sessions[c].perspectives == null) {
+          console.log("           " + files.seasons[a].events[b].sessions[c].Name);
+
+
+
+          // CREATE SESSION DIV
+        var sessionDiv = document.createElement("div");
+        var sessionTitle = document.createElement("h4");
+        sessionTitle.innerHTML = files.seasons[a].events[b].sessions[c].Name;
+        sessionDiv.appendChild(sessionTitle);
+        eventDiv.appendChild(sessionDiv);
+        // CREATE SESSION DIV
+
+
+
+          for (var d = 0; d < files.seasons[a].events[b].sessions[c].perspectives.length; d++) { // for all perspectives
+            console.log("                 " + files.seasons[a].events[b].sessions[c].perspectives[d].path);
+
+            //IF EMPTY BUTTON // NEEDS CHANGED
+            if (files.seasons[a].events[b].sessions[c].perspectives[d].path.length < 10) {
               continue;
             }
-            console.log("           " + files.seasons[a].events[b].sessions[c].Name);
+            //IF EMPTY BUTTON
 
-            for (var d = 0; d < files.seasons[a].events[b].sessions[c].perspectives.length; d++) {
-              console.log("                 " + files.seasons[a].events[b].sessions[c].perspectives[d].path);
-              
-              //IF EMPTY BUTTON // NEEDS CHANGED
-              if (files.seasons[a].events[b].sessions[c].perspectives[d].path.length < 10) {
-                continue;
-              }
-              //IF EMPTY BUTTON
-
-              numberOfFiles++;
-              var button = document.createElement("button");
-              button.innerHTML = files.seasons[a].events[b].sessions[c].perspectives[d].path;
-              button.value = button.innerHTML;
-              var last;
-              if (!button.value.includes("Pre-Season")&& !button.value.includes("F2")&&button.value.includes("/Main Feed.m3u8")) { // should give last main feed
-                last = button.value;
-              }
-              //body.appendChild(button);
-              button.addEventListener("click", function () {
-                changeSource(this.value)
-              })
-
+            numberOfFiles++; // log how many files are being served 
+            var button = document.createElement("button");
+            button.innerHTML = files.seasons[a].events[b].sessions[c].perspectives[d].Name;
+            button.value= files.seasons[a].events[b].sessions[c].perspectives[d].path;
+            var last;
+            if (!button.value.includes("Pre-Season") && !button.value.includes("F2") && button.value.includes("/Main Feed.m3u8")) { // should give last main feed // replay feature
+              last = button.value;
             }
+            sessionDiv.appendChild(button);
+            button.addEventListener("click", function () {
+              changeSource(this.value)
+            })
+
           }
         }
       }
-      console.log(numberOfFiles);
-
-      // if season not exists add to body
-      // if event doesn't exist in season add to season
-      // if session doesn't exist in event add to event
-      // add button to event
-      // var button = document.createElement("button");
-      // button.innerHTML = files.files[i].path
-      // button.value = files.files[i].path
-      // var path = files.files[i].path
-      // var body = document.getElementsByTagName("body")[0];
-      // body.appendChild(button);
-      // button.addEventListener("click", function () {
-      //   changeSource(this.value)
-      // })
-      changeSource(last);
-    })
-
-  </script>
-  </script>
-  <div id="player"></div>
-  <script>
-
-    var player = new Clappr.Player({
-      parentId: "#player",
-      autoPlay: true,
-    });
-  </script>
-  <script>
-    function changeSource(sourceString) {
-      console.log("Switching to : " + sourceString)
-      console.log(player.core.getCurrentPlayback().name);
-      player.configure({
-
-        source: sourceString,
-        autoPlay: true,
-
-      })
     }
+    console.log(numberOfFiles);
+    changeSource(last); // change the source to last ^^
+  })
 
-  </script>
+</script>
+</script>
+<div id="player"></div>
+<script>
+
+  var player = new Clappr.Player({
+    parentId: "#player",
+    autoPlay: false, //CHANGE THIS
+  });
+</script>
+<script>
+  function changeSource(sourceString) {
+    console.log("Switching to : " + sourceString)
+    console.log(player.core.getCurrentPlayback().name);
+    player.configure({
+
+      source: sourceString,
+      autoPlay: true, //CHANGE THIS
+
+    })
+  }
+
+</script>
 </body>
 
 </html>
