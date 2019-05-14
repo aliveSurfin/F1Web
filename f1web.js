@@ -119,9 +119,10 @@ function search(year, event, session, stream, f1) {
                 }
             }
 
-            var end_time = new Date(sessionJSON.end_time)
-            if (getDaysBetween(end_time) <= 0) {
-                console.log("*found last race")
+            var start_time = new Date(sessionJSON.start_time)
+            if (getDaysBetween(start_time) <= 0) {
+                console.log("*found last race");
+                console.log("days between" + getDaysBetween(start_time))
                 break;
             }
         }
