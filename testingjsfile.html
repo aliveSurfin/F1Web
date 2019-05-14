@@ -1,0 +1,64 @@
+<html>
+
+
+
+<head>
+
+    <script src="f1web.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/clappr@latest/dist/clappr.min.js"></script>
+
+</head>
+<body>
+    
+    <script>
+        // var seas = getSeasonsJSON()[1];
+        // console.log(seas);
+        // var event = getEventJSON(seas.eventoccurrence_urls[0]);
+        // console.log(event);
+        // var sess = getSessionJSON(event.sessionoccurrence_urls[4]);
+        // console.log(sess);
+        // var streams = getSessionStreamsJSON(sess.slug);
+        // console.log(streams);
+        // var fixedStreams = addCorrectURLs(streams);
+        // console.log(fixedStreams);
+        // year // event // session // stream // f1
+        //search("2019","esp","quali","vettel");
+        //search("","","","");
+       
+        //search();
+
+        
+        
+        
+        
+        </script>
+<div id="player"></div>
+<script>
+
+  var player = new Clappr.Player({
+    parentId: "#player",
+    autoPlay: false, //CHANGE THIS
+  });
+
+  //changeSource(search());
+</script>
+<script>
+  function changeSource(sourceString) {
+    console.log("Switching to : " + sourceString)
+    console.log(player.core.getCurrentPlayback().name);
+    player.configure({
+
+      source: sourceString,
+      autoPlay: true, //CHANGE THIS
+
+    })
+  }
+
+</script>
+<script>
+    search();
+    console.log(document.body.getElementsByTagName("a")[0].href);
+changeSource(document.body.getElementsByTagName("a")[0].href);
+</script>
+</body>
+</html>
