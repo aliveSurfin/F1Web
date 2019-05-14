@@ -38,6 +38,7 @@
   var player = new Clappr.Player({
     parentId: "#player",
     autoPlay: false, //CHANGE THIS
+    mimeType: 'application/x-mpegURL',
   });
 
   //changeSource(search());
@@ -50,15 +51,15 @@
 
       source: sourceString,
       autoPlay: true, //CHANGE THIS
+      mimeType: 'application/x-mpegURL',
 
     })
   }
 
 </script>
 <script>
-    search();
-    console.log(document.body.getElementsByTagName("a")[0].href);
-changeSource(document.body.getElementsByTagName("a")[0].href);
+    
+changeSource(search());
 </script>
 </body>
 </html>

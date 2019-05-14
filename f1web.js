@@ -267,14 +267,24 @@ function createFile(array) {
     var fileurl = window.webkitURL.createObjectURL(fileBlob);
     var newFile = new File(array,"master.m3u8");
     
+    var data = new Blob([arrayStr],{type: 'video/m3u8'});
+
+    return window.URL.createObjectURL(data);
+
+    // hostFile(newFile);
     
-    //hostFile(newFile);
-    var download = document.createElement("a");
-    download.download = "master.m3u8";
-    download.innerHTML = "test";
-    download.href = window.webkitURL.createObjectURL(fileBlob);
-    document.body.appendChild(download);
-    return(newFile);
+
+
+
+    // var download = document.createElement("a");
+    // download.download = "master.m3u8";
+    // download.innerHTML = "test";
+    // download.href = window.webkitURL.createObjectURL(fileBlob);
+    // document.body.appendChild(download);
+    // var reader = new FileReader();
+    // console.log(reader.readAsDataURL(newFile));
+    // return 
+   
                 
      
    // downloadFile(file);
@@ -283,12 +293,16 @@ function createFile(array) {
         
 }
 function hostFile(fileBlob){
+   
+    
+
     console.log(fileBlob);
     var cors2 = "https://cors-anywhere.herokuapp.com/";
-    var url = "http://0x0.st";
+    var url = "https://transfer.sh/test.m3u8";//"http://0x0.st";
+    url = cors2+url;
     var xhr = new XMLHttpRequest();
-    xhr.open('POST',cors2 +url,false);
-    xhr.send("file=@"+fileBlob);
+    xhr.open('PUT',url,false);
+    xhr.send(fileBlob);
     console.log(xhr.statusText);
     console.log(xhr.response);
 }
