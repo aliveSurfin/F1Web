@@ -37,3 +37,11 @@ mimeType: 'application/x-mpegURL',
 ```
 ## Acknowledgments
 Basically a js implentation of : https://github.com/SoMuchForSubtlety/F1viewer
+
+
+
+
+# Coming Soon
+Seasons before 2018 <br/>
+Radio Selector: m3u8 file with all team radio streams for session <br/>
+
