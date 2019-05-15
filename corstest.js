@@ -1,5 +1,5 @@
-var cors2 = "https://cors-anywhere.herokuapp.com/";
-var cors = "https://cors.vaindil.xyz/";
+var cors2 = ""; // "https://cors-anywhere.herokuapp.com/";
+var cors = ""; //"https://cors.vaindil.xyz/";
 var seasonUrl = "https://f1tv.formula1.com/api/race-season/?fields=year,name,self,has_content,eventoccurrence_urls&year__gt=2017&order=year"
 var urlStart = "https://f1tv.formula1.com"
 var sessionURLstart = "https://f1tv.formula1.com/api/session-occurrence/?fields=global_channel_urls,global_channel_urls__uid,global_channel_urls__slug,global_channel_urls__self,channel_urls,channel_urls__slug,channel_urls__name,channel_urls__uid,channel_urls__self,eventoccurrence_url,eventoccurrence_url__slug,eventoccurrence_url__circuit_url,eventoccurrence_url__circuit_url__short_name,session_type_url__name&fields_to_expand=global_channel_urls,channel_urls&slug=";
@@ -298,7 +298,7 @@ function hostFile(fileBlob) {
 
 
     console.log(fileBlob);
-    var cors2 = "https://cors-anywhere.herokuapp.com/";
+    var cors2 =""; // "https://cors-anywhere.herokuapp.com/";
     var url = "https://transfer.sh/test.m3u8";//"http://0x0.st";
     url = cors2 + url;
     var xhr = new XMLHttpRequest();
@@ -372,7 +372,7 @@ function getPlayableURL(assetID) { // add own function for post request
     //console.log("ASSET ID : " + assetID);
     var url = "https://f1tv.formula1.com/api/viewings/";
     //var assetID = "/api/channels/chan_9b01938bf1e94d2c942c34a74ea83636/";
-    var cors2 = "https://cors-anywhere.herokuapp.com/";
+    var cors2 =""; // "https://cors-anywhere.herokuapp.com/";
     var formattedID = "";
     var isChannel = false;
     if (assetID.includes("/api/channels/")) {
