@@ -23,5 +23,17 @@ stream  : main feed of stream <br/>
 f1      : true 
 
 
+### Returns
+```
+window.URL.createObjectURL(data);
+```
+data : the created m3u8 file returned as a blob url <br/>
+
+Because there is no extension on the file you **must** specify the mimeType in your hls player of choice, an example is given in index.html <br/>
+
+
+```
+mimeType: 'application/x-mpegURL',
+```
 ## Acknowledgments
 Basically a js implentation of : https://github.com/SoMuchForSubtlety/F1viewer
