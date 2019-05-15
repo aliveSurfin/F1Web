@@ -42,12 +42,10 @@
             width: "100%",
             height: "100%",
             parentId: "#player",
-            autoPlay: false, //CHANGE THIS
+            autoPlay: false,
             mimeType: 'application/x-mpegURL',
             plugins: [LevelSelector]
         });
-
-  //changeSource(search());
     </script>
     <script>
         function changeSource(sourceString) {
@@ -56,7 +54,7 @@
             player.configure({
 
                 source: sourceString,
-                autoPlay: true, //CHANGE THIS
+                autoPlay: true,
                 mimeType: 'application/x-mpegURL',
 
 

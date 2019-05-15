@@ -9,7 +9,7 @@ function search(year, event, session, stream, f1) {
     var found;
     // defaults
     if (stream === undefined || stream === "" || stream === null) {
-        stream = "WIF";
+        stream = "Main Feed";
     } else {
         stream = stream.trim();
     }
@@ -33,8 +33,8 @@ function search(year, event, session, stream, f1) {
     } else {
         f1 = false;
     }
-    var f1str = f1? "yes" : "no";
-    console.log("Year: " + year + " | " + "Event: " + event + " | " + "Sesson: " + session + " | " + "Stream: " + stream + " | " + "F1 ?: " + f1str );
+    var f1str = f1 ? "yes" : "no";
+    console.log("Year: " + year + " | " + "Event: " + event + " | " + "Sesson: " + session + " | " + "Stream: " + stream + " | " + "F1 ?: " + f1str);
 
     // searching season
     var seasonJSON = getSeasonsJSON();
@@ -90,7 +90,7 @@ function search(year, event, session, stream, f1) {
 
         }
     }
-    console.log("Event : " +eventJSON.name);
+    console.log("Event : " + eventJSON.name);
     console.log(eventJSON);
 
     //searching session
@@ -103,14 +103,14 @@ function search(year, event, session, stream, f1) {
 
 
             ) {
-                
+
                 console.log("*skipped - no content");
                 continue;
             } else {
                 if (f1 === true) {
                     // console.log(sessionJSON.session_name);
                     if (!sessionJSON.name.includes("F1") // needs fiddling
-                        
+
 
                     ) {
                         console.log("*skipped- not f1");
@@ -154,14 +154,14 @@ function search(year, event, session, stream, f1) {
         }
     }
 
-    console.log("Session : " +sessionJSON.name);
+    console.log("Session : " + sessionJSON.name);
     console.log(sessionJSON);
 
     //search streams
     var sessionStreamJSON = getSessionStreamsJSON(sessionJSON.slug);
     sessionStreamJSON = sessionStreamJSON.objects[0]
-    if (stream === "WIF") {
-        for (var x = sessionStreamJSON.channel_urls.length-1; x>-1 ; x--) {
+    if (stream === "Main Feed") {
+        for (var x = sessionStreamJSON.channel_urls.length - 1; x > -1; x--) {
             if (sessionStreamJSON.channel_urls[x].name.includes(stream)) {
                 sessionStreamJSON.channel_urls[x].self = getPlayableURL(sessionStreamJSON.channel_urls[x].self);
                 console.log("found*");
@@ -184,23 +184,23 @@ function search(year, event, session, stream, f1) {
                 console.log(sessionStreamJSON.channel_urls[x].name);
                 console.log(sessionStreamJSON.channel_urls[x]);
                 found = sessionStreamJSON.channel_urls[x];
-                
+
                 break;
             }
 
         }
     }
 
-    if(found===null){
-        
-    }else{
+    if (found === null) {
+
+    } else {
         var file = getFixedArray(found.self);
         var file = createFile(file);
         return file;
 
     }
     console.log("test");
-    
+
 
 }
 function getm3u8asArray(url) {
@@ -259,21 +259,21 @@ function getFixedArray(url) {
 
 }
 function createFile(array) {
-    var arrayStr ="";
-    for(var x=0; x<array.length; x++){
+    var arrayStr = "";
+    for (var x = 0; x < array.length; x++) {
         arrayStr += array[x];
         arrayStr += "\n";
     }
     var fileBlob = new Blob([arrayStr]);
     var fileurl = window.webkitURL.createObjectURL(fileBlob);
-    var newFile = new File(array,"master.m3u8");
-    
-    var data = new Blob([arrayStr],{type: 'video/m3u8'});
+    var newFile = new File(array, "master.m3u8");
+
+    var data = new Blob([arrayStr], { type: 'video/m3u8' });
 
     return window.URL.createObjectURL(data);
 
     // hostFile(newFile);
-    
+
 
 
 
@@ -285,29 +285,29 @@ function createFile(array) {
     // var reader = new FileReader();
     // console.log(reader.readAsDataURL(newFile));
     // return 
-   
-                
-     
-   // downloadFile(file);
-       
-        
-        
+
+
+
+    // downloadFile(file);
+
+
+
 }
-function hostFile(fileBlob){
-   
-    
+function hostFile(fileBlob) {
+
+
 
     console.log(fileBlob);
     var cors2 = "https://cors-anywhere.herokuapp.com/";
     var url = "https://transfer.sh/test.m3u8";//"http://0x0.st";
-    url = cors2+url;
+    url = cors2 + url;
     var xhr = new XMLHttpRequest();
-    xhr.open('PUT',url,false);
+    xhr.open('PUT', url, false);
     xhr.send(fileBlob);
     console.log(xhr.statusText);
     console.log(xhr.response);
 }
-function downloadFile(file){
+function downloadFile(file) {
     var a = document.createElement("a");
     url = URL.createObjectURL(file);
     a.href = url;
@@ -342,7 +342,14 @@ function getSessionJSON(sessionoccurence_url) {
 function getSessionStreamsJSON(slug) {
     var sessionStreamURL = sessionURLstart + slug;
     var sessionStreamJSON = JSON.parse(getRequest(sessionStreamURL));
-   // console.log(sessionStreamURL); // TESTING
+    for (var x = 0; x < sessionStreamJSON.objects[0].channel_urls.length; x++) {
+        console.log(sessionStreamJSON.objects[0].channel_urls[x].name);
+        switch (sessionStreamJSON.objects[0].channel_urls[x].name) {
+            case "WIF":
+            sessionStreamJSON.objects[0].channel_urls[x].name = "Main Feed"
+                break;
+        }
+    }
     return sessionStreamJSON;
 }
 function addCorrectURLs(sessionStreamJSON) {
