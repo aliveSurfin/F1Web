@@ -8,17 +8,20 @@ function search(year, event, session, stream, f1)
 
 ```
 ### Parameters
-year    : the year of the season eg : 2018
-event   : the name of the event eg: Spanish Grand Prix
-session : the name of the session eg: F1 Race
-stream  : the name of the stream eg: Sebastian Vettel(any driver name) / data / pit lane / driver / Main Feed
-f1      : t/f to skip non f1 events | f2 f3 supercup etc will be skipped if f1 is true
+year    : the year of the season eg : 2018 <br/>
+event   : the name of the event eg: Spanish Grand Prix <br/>
+session : the name of the session eg: F1 Race <br/>
+stream  : the name of the stream eg: Sebastian Vettel(any driver name) / data / pit lane / driver / Main Feed <br/>
+f1      : t/f to skip non f1 events | f2 f3 supercup etc will be skipped if f1 is true <br/>
+
+
 ### If a parameter is not given it will be set to the defaults 
-year    : latest year found 
-event   : latest event found
-session : latest session found
-stream  : main feed of stream
+year    : latest year found <br/>
+event   : latest event found <br/>
+session : latest session found <br/>
+stream  : main feed of stream <br/>
 f1      : true 
+
 
 ## Acknowledgments
 Basically a js implentation of : https://github.com/SoMuchForSubtlety/F1viewer
