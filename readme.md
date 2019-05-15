@@ -36,8 +36,12 @@ Because there is no extension on the file you **must** specify the mimeType in y
 mimeType: 'application/x-mpegURL',
 ```
 ## Acknowledgments
-<<<<<<< HEAD
 Basically a js implentation of : https://github.com/SoMuchForSubtlety/F1viewer
-=======
-Basically a js implentation of : https://github.com/SoMuchForSubtlety/F1viewer
->>>>>>> 998d7dcea5894e700c05aed1f289a301bc210267
+
+
+
+
+# Coming Soon
+Seasons before 2018 <br/>
+Radio Selector: m3u8 file with all team radio streams for session <br/>
+
