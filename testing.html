@@ -15,6 +15,8 @@
     <select name="Event" id="eventSelect"></select>
     <select name="Session" id="sessionSelect"></select>
     <select name="Stream" id="streamSelect"></select>
+    <button onclick="hideSelects()">Hide Menu</button>
+    <button onclick="showSelects()">Show Menu</button>
     <div id="player"></div>
     <script>
         var width = window.innerWidth * .8;
@@ -27,6 +29,8 @@
             mimeType: 'application/x-mpegURL',
             plugins: [LevelSelector]
         });
+        
+        
     </script>
 
     <script>
@@ -140,6 +144,30 @@
             sessionSelect.disabled = false;
             streamSelect.disabled = false;
         }
+        function hideSelects(){
+            var seasonSelect = document.getElementById("seasonSelect");
+            var eventSelect = document.getElementById("eventSelect");
+            var sessionSelect = document.getElementById("sessionSelect");
+            var streamSelect = document.getElementById("streamSelect");
+            seasonSelect.style.display = "none";
+            eventSelect.style.display = "none";
+            sessionSelect.style.display = "none";
+            streamSelect.style.display = "none";
+
+            
+        }
+        function showSelects(){
+            var seasonSelect = document.getElementById("seasonSelect");
+            var eventSelect = document.getElementById("eventSelect");
+            var sessionSelect = document.getElementById("sessionSelect");
+            var streamSelect = document.getElementById("streamSelect");
+            seasonSelect.style.display = "inline";
+            eventSelect.style.display = "inline";
+            sessionSelect.style.display = "inline";
+            streamSelect.style.display = "inline";
+
+            
+        }
 
 
 
@@ -149,6 +177,9 @@
                 selectbox.remove(i);
             }
         }
+    </script>
+    <script>
+    showSelects();
     </script>
     <script>
         function changeSource(sourceString) {
