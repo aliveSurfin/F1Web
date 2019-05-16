@@ -100,8 +100,10 @@
             removeOptions(streamSelect);
             streamSelect.setAttribute("size", array.length);
             if (array.length === 0) {
+                enableSelects();
                 return;
             } else if (array.length === 1) {
+                enableSelects();
                 changeSource(array[0].blob);
                 return;
             }
