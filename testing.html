@@ -85,15 +85,21 @@
             var array = sessionStreamsToArray(sessionSlug);
             removeOptions(streamSelect);
             streamSelect.setAttribute("size", array.length);
+            if (array.length === 0) {
+                return;
+            } else if (array.length === 1) {
+                changeSource(array[0].blob);
+                return;
+            }
             for (var x = 0; x < array.length; x++) {
                 var opt = document.createElement('option');
                 opt.innerHTML = array[x].self;
                 opt.object = array[x];
                 streamSelect.appendChild(opt);
             }
-            streamSelect.setAttribute("onchange","changeStream()");
+            streamSelect.setAttribute("onchange", "changeStream()");
         }
-        function changeStream(){
+        function changeStream() {
             var streamSelect = document.getElementById("streamSelect");
             var blob = streamSelect[streamSelect.selectedIndex].object.blob;
             changeSource(blob);
