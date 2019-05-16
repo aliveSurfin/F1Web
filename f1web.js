@@ -363,7 +363,7 @@ function createFile(array) {
         arrayStr += "\n";
     }
     var fileBlob = new Blob([arrayStr]);
-    var fileurl = window.webkitURL.createObjectURL(fileBlob);
+    //var fileurl = window.webkitURL.createObjectURL(fileBlob);
     var newFile = new File(array, "master.m3u8");
 
     var data = new Blob([arrayStr], { type: 'video/m3u8' });
