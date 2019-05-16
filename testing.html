@@ -44,6 +44,8 @@
         select.setAttribute("onchange", "updateEvents()");
         //     document.body.appendChild(select);
         function updateEvents() {
+            disableSelects();
+
             var eventSelect = document.getElementById("eventSelect");
             var seasonSelect = document.getElementById("seasonSelect");
             console.log(seasonSelect.selectedIndex);
@@ -60,8 +62,12 @@
             }
             eventSelect.setAttribute("onchange", "updateSessions()");
 
+            enableSelects();
+
         }
         function updateSessions() {
+            disableSelects();
+
             var sessionSelect = document.getElementById("sessionSelect");
             var eventSelect = document.getElementById("eventSelect");
             var sessionoccurrence_urls = eventSelect[eventSelect.selectedIndex].object.sessionoccurrence_urls;
@@ -76,8 +82,12 @@
             }
             sessionSelect.setAttribute("onchange", "updateStreams()")
 
+            enableSelects();
+
         }
         function updateStreams() {
+            disableSelects();
+
             var streamSelect = document.getElementById("streamSelect");
             var sessionSelect = document.getElementById("sessionSelect");
 
@@ -98,12 +108,39 @@
                 streamSelect.appendChild(opt);
             }
             streamSelect.setAttribute("onchange", "changeStream()");
+
+            enableSelects();
         }
         function changeStream() {
+            disableSelects();
+            
             var streamSelect = document.getElementById("streamSelect");
             var blob = streamSelect[streamSelect.selectedIndex].object.blob;
             changeSource(blob);
+
+            enableSelects();
         }
+        function disableSelects(){
+            var seasonSelect = document.getElementById("seasonSelect");
+            var eventSelect = document.getElementById("eventSelect");
+            var sessionSelect = document.getElementById("sessionSelect");
+            var streamSelect = document.getElementById("streamSelect");
+            seasonSelect.disabled = true;
+            eventSelect.disabled = true;
+            sessionSelect.disabled = true;
+            streamSelect.disabled = true;
+        }
+        function enableSelects(){
+            var seasonSelect = document.getElementById("seasonSelect");
+            var eventSelect = document.getElementById("eventSelect");
+            var sessionSelect = document.getElementById("sessionSelect");
+            var streamSelect = document.getElementById("streamSelect");
+            seasonSelect.disabled = false;
+            eventSelect.disabled = false;
+            sessionSelect.disabled = false;
+            streamSelect.disabled = false;
+        }
+
 
 
         function removeOptions(selectbox) {
