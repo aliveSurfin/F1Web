@@ -4,6 +4,104 @@ var seasonUrl = "https://f1tv.formula1.com/api/race-season/?fields=year,name,sel
 var urlStart = "https://f1tv.formula1.com"
 var sessionURLstart = "https://f1tv.formula1.com/api/session-occurrence/?fields=global_channel_urls,global_channel_urls__uid,global_channel_urls__slug,global_channel_urls__self,channel_urls,channel_urls__slug,channel_urls__name,channel_urls__uid,channel_urls__self,eventoccurrence_url,eventoccurrence_url__slug,eventoccurrence_url__circuit_url,eventoccurrence_url__circuit_url__short_name,session_type_url__name&fields_to_expand=global_channel_urls,channel_urls&slug=";
 
+
+function seasonsToArray() {
+    var seasons = new Array();
+    var seasonJSON = getSeasonsJSON();
+
+    for (var x = 0; x < seasonJSON.length; x++) {
+        seasons.push(
+            {
+                self: seasonJSON[x].name,
+                name: seasonJSON[x].name,
+                eventoccurrence_urls: seasonJSON[x].eventoccurrence_urls,
+            }
+        )
+    }
+    return seasons;
+}
+function eventsToArray(eventoccurrence_urls) {
+    var events = new Array();
+    for (var x = 0; x < eventoccurrence_urls.length; x++) {
+        var event = getEventJSON(eventoccurrence_urls[x]);
+        events.push(
+            {
+                self: event.name,
+                name: event.name,
+                official_name: event.official_name,
+                circuit_url: event.circuit_url,
+                end_date: event.end_date,
+                start_date: event.start_date,
+                sessionoccurrence_urls: event.sessionoccurrence_urls,
+
+
+
+
+
+
+
+            }
+        )
+
+        //break;
+    }
+
+    return events;
+}
+function sessionsToArray(sessionoccurrence_urls) {
+    var sessions = new Array();
+
+    for (var x = 0; x < sessionoccurrence_urls.length; x++) {
+        var session = getSessionJSON(sessionoccurrence_urls[x]);
+        //console.log(session);
+        if(session.status==="expired"){
+            continue;
+        }
+        sessions.push(
+            {
+                self: session.name,
+                name: session.name,
+                channel_urls: session.channel_urls,
+                status: session.status,
+                slug: session.slug,
+                start_time: session.start_time,
+                end_time: session.end_time,
+
+            }
+
+        )
+        //break;
+    }
+    return sessions;
+}
+function sessionStreamsToArray(slug){
+    
+    var sessionStreams = new Array();
+    var sessionStreamJSON = getSessionStreamsJSON(slug);
+    sessionStreamJSON = sessionStreamJSON.objects[0];
+    for(var x=0; x<sessionStreamJSON.channel_urls.length;x++){
+        sessionStreamJSON.channel_urls[x].self = getPlayableURL(sessionStreamJSON.channel_urls[x].self);
+        var file = getFixedArray(sessionStreamJSON.channel_urls[x].self);
+        var url = createFile(file);
+        
+        sessionStreams.push(
+            {
+                self: sessionStreamJSON.channel_urls[x].name,
+                name: sessionStreamJSON.channel_urls[x].name,
+                blob : url,
+            }
+        )
+        
+    }
+    return sessionStreams;
+}
+function TESTING() {
+    var seasonArray = seasonsToArray();
+    var eventArray = eventsToArray(seasonArray[1].eventoccurrence_urls);
+    var sessionArray = sessionsToArray(eventArray[0].sessionoccurrence_urls);
+    var sessionStreamsArray = sessionStreamsToArray(sessionArray[1].slug);
+    console.log(sessionStreamsArray);
+}
 function search(year, event, session, stream, f1) {
     //
     var found;
@@ -159,7 +257,7 @@ function search(year, event, session, stream, f1) {
 
     //search streams
     var sessionStreamJSON = getSessionStreamsJSON(sessionJSON.slug);
-    sessionStreamJSON = sessionStreamJSON.objects[0]
+    sessionStreamJSON = sessionStreamJSON.objects[0];
     if (stream === "Main Feed") {
         for (var x = sessionStreamJSON.channel_urls.length - 1; x > -1; x--) {
             if (sessionStreamJSON.channel_urls[x].name.includes(stream)) {
@@ -272,40 +370,8 @@ function createFile(array) {
 
     return window.URL.createObjectURL(data);
 
-    // hostFile(newFile);
 
 
-
-
-    // var download = document.createElement("a");
-    // download.download = "master.m3u8";
-    // download.innerHTML = "test";
-    // download.href = window.webkitURL.createObjectURL(fileBlob);
-    // document.body.appendChild(download);
-    // var reader = new FileReader();
-    // console.log(reader.readAsDataURL(newFile));
-    // return 
-
-
-
-    // downloadFile(file);
-
-
-
-}
-function hostFile(fileBlob) {
-
-
-
-    console.log(fileBlob);
-    var cors2 = "https://cors-anywhere.herokuapp.com/";
-    var url = "https://transfer.sh/test.m3u8";//"http://0x0.st";
-    url = cors2 + url;
-    var xhr = new XMLHttpRequest();
-    xhr.open('PUT', url, false);
-    xhr.send(fileBlob);
-    console.log(xhr.statusText);
-    console.log(xhr.response);
 }
 function downloadFile(file) {
     var a = document.createElement("a");
@@ -343,10 +409,10 @@ function getSessionStreamsJSON(slug) {
     var sessionStreamURL = sessionURLstart + slug;
     var sessionStreamJSON = JSON.parse(getRequest(sessionStreamURL));
     for (var x = 0; x < sessionStreamJSON.objects[0].channel_urls.length; x++) {
-        console.log(sessionStreamJSON.objects[0].channel_urls[x].name);
+        //console.log(sessionStreamJSON.objects[0].channel_urls[x].name);
         switch (sessionStreamJSON.objects[0].channel_urls[x].name) {
             case "WIF":
-            sessionStreamJSON.objects[0].channel_urls[x].name = "Main Feed"
+                sessionStreamJSON.objects[0].channel_urls[x].name = "Main Feed"
                 break;
         }
     }
