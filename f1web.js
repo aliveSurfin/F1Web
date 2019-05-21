@@ -1,5 +1,7 @@
 var cors2 = "https://cors-anywhere.herokuapp.com/";
+// cors2 = "https://cors.io/";
 var cors = "https://cors.vaindil.xyz/";
+
 var seasonUrl = "https://f1tv.formula1.com/api/race-season/?fields=year,name,self,has_content,eventoccurrence_urls&year__gt=2017&order=year"
 var urlStart = "https://f1tv.formula1.com"
 var sessionURLstart = "https://f1tv.formula1.com/api/session-occurrence/?fields=global_channel_urls,global_channel_urls__uid,global_channel_urls__slug,global_channel_urls__self,channel_urls,channel_urls__slug,channel_urls__name,channel_urls__uid,channel_urls__self,eventoccurrence_url,eventoccurrence_url__slug,eventoccurrence_url__circuit_url,eventoccurrence_url__circuit_url__short_name,session_type_url__name&fields_to_expand=global_channel_urls,channel_urls&slug=";
@@ -54,7 +56,7 @@ function sessionsToArray(sessionoccurrence_urls) {
     for (var x = 0; x < sessionoccurrence_urls.length; x++) {
         var session = getSessionJSON(sessionoccurrence_urls[x]);
         //console.log(session);
-        if(session.status==="expired"){
+        if (session.status === "expired") {
             continue;
         }
         sessions.push(
@@ -74,24 +76,25 @@ function sessionsToArray(sessionoccurrence_urls) {
     }
     return sessions;
 }
-function sessionStreamsToArray(slug){
-    
+function sessionStreamsToArray(slug) {
+
     var sessionStreams = new Array();
     var sessionStreamJSON = getSessionStreamsJSON(slug);
     sessionStreamJSON = sessionStreamJSON.objects[0];
-    for(var x=0; x<sessionStreamJSON.channel_urls.length;x++){
+    for (var x = 0; x < sessionStreamJSON.channel_urls.length; x++) {
         sessionStreamJSON.channel_urls[x].self = getPlayableURL(sessionStreamJSON.channel_urls[x].self);
         var file = getFixedArray(sessionStreamJSON.channel_urls[x].self);
         var url = createFile(file);
-        
+
         sessionStreams.push(
             {
                 self: sessionStreamJSON.channel_urls[x].name,
                 name: sessionStreamJSON.channel_urls[x].name,
-                blob : url,
+                blob: url,
+                file: file,
             }
         )
-        
+
     }
     return sessionStreams;
 }
@@ -438,7 +441,7 @@ function getPlayableURL(assetID) { // add own function for post request
     //console.log("ASSET ID : " + assetID);
     var url = "https://f1tv.formula1.com/api/viewings/";
     //var assetID = "/api/channels/chan_9b01938bf1e94d2c942c34a74ea83636/";
-    var cors2 = "https://cors-anywhere.herokuapp.com/";
+   
     var formattedID = "";
     var isChannel = false;
     if (assetID.includes("/api/channels/")) {
@@ -456,9 +459,9 @@ function getPlayableURL(assetID) { // add own function for post request
     xhr.open('POST', cors2 + url, false);
 
     xhr.send(x);
-    if (xhr.status == 400) {
-        console.log(xhr.responseText);
-    }
+    // if (xhr.status !== 200) {
+    //     console.log(xhr.responseText);
+    // }
     var respData = xhr.responseText;
 
     if (respData.includes("form_validation_errors")) {
@@ -466,6 +469,7 @@ function getPlayableURL(assetID) { // add own function for post request
         return -1;
 
     }
+   // console.log(respData);
     var respJSON = JSON.parse(respData);
     if (isChannel) {
         return respJSON.tokenised_url;
@@ -513,4 +517,74 @@ function getDaysBetween(date) {
     var days = hours / 24;
     //console.log(days);
     return days;
+}
+function testingTeamRadio() {
+//     var season = seasonsToArray()[1];
+//     var event = eventsToArray(season.eventoccurrence_urls)[0];
+//    // console.log(event);
+//     var session = sessionsToArray(event.sessionoccurrence_urls)[4];
+    
+//     var slug = session.slug;
+    var slug = "2019-australian-grand-prix-race";
+    getSessionTeamRadio(slug);
+}
+function getSessionTeamRadio(slug) {
+    console.log(slug);
+    var allDrivers = new Array();
+    var videoFiles = new Array();
+    var sessionStreamsArray = sessionStreamsToArray(slug);
+    console.log(sessionStreamsArray.length);
+    var test =0;
+    for (var x = 0; x < sessionStreamsArray.length; x++) {
+        var name = sessionStreamsArray[x].name;
+        if ( name !== "pit lane"
+            && name !== "driver"
+            && name !== "data"
+        ) {
+            if(name === "Main Feed"){
+                for(var a=0; a<sessionStreamsArray[x].file.length;a++){
+                    if(sessionStreamsArray[x].file[a].includes("BANDWIDTH")){ // change this to get rid of audio stream
+                        videoFiles.push(sessionStreamsArray[x].file[a]);
+                        videoFiles.push(sessionStreamsArray[x].file[a+1]);
+                    }
+                }
+                console.log(sessionStreamsArray[x]);
+            }else{
+
+            
+            allDrivers.push(sessionStreamsArray[x]);
+            test++;
+            }
+        }
+    }
+    console.log("Number of drivers: " + test)
+//console.log(allDrivers);
+    var allTeamRadio = new Array();
+    for (var y = 0; y < allDrivers.length; y++) {
+        for (var x = 0; x < allDrivers[y].file.length; x++) {
+            if (allDrivers[y].file[x].toLowerCase().includes("teamradio")) {
+                allTeamRadio.push({
+                    name: allDrivers[y].name,
+                    url: allDrivers[y].file[x],
+                })
+            }
+        }
+    }
+    var finalFile = new Array();
+    finalFile.push("#EXTM3U");
+    finalFile.push("#EXT-X-INDEPENDENT-SEGMENTS"); // change to seperate file per driver // return array of blobs
+    for(var x=0; x<allTeamRadio.length;x++){
+        allTeamRadio[x].url = allTeamRadio[x].url.replace("TeamRadio",allTeamRadio[x].name);
+        finalFile.push(allTeamRadio[x].url);
+    }
+    for(var x=0; x<videoFiles.length;x++){
+        finalFile.push(videoFiles[x]);
+    }
+    for(var x=0; x<finalFile.length; x++){
+        console.log(finalFile[x]);
+    }
+
+
+
+
 }

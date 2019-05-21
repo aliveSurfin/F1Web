@@ -52,7 +52,7 @@
 
             var eventSelect = document.getElementById("eventSelect");
             var seasonSelect = document.getElementById("seasonSelect");
-            console.log(seasonSelect.selectedIndex);
+            // console.log(seasonSelect.selectedIndex);
             var eventoccurrence_urls = seasonSelect[seasonSelect.selectedIndex].object.eventoccurrence_urls;
             var array = eventsToArray(eventoccurrence_urls);
             removeOptions(eventSelect);
@@ -65,7 +65,8 @@
                 eventSelect.appendChild(opt);
             }
             eventSelect.setAttribute("onchange", "updateSessions()");
-
+            removeOptions(document.getElementById("sessionSelect"));
+            removeOptions(document.getElementById("streamSelect"));
             enableSelects();
 
         }
@@ -85,7 +86,7 @@
                 sessionSelect.appendChild(opt);
             }
             sessionSelect.setAttribute("onchange", "updateStreams()")
-
+            removeOptions(document.getElementById("streamSelect"));
             enableSelects();
 
         }
@@ -178,6 +179,7 @@
             for (i = selectbox.options.length - 1; i >= 0; i--) {
                 selectbox.remove(i);
             }
+            selectbox.setAttribute("size",0);
         }
     </script>
     <script>
