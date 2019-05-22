@@ -1,22 +1,43 @@
 <html>
 
 <head>
-    <link href="https://vjs.zencdn.net/7.5.4/video-js.css" rel="stylesheet">
-
-    <!-- If you'd like to support IE8 (for Video.js versions prior to v7) -->
-    <script src="https://vjs.zencdn.net/ie8/1.1.2/videojs-ie8.min.js"></script>
+        <link href="//vjs.zencdn.net/7.3.0/video-js.min.css" rel="stylesheet">
+        <script src="//vjs.zencdn.net/7.3.0/video.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/videojs-contrib-hls/5.15.0/videojs-contrib-hls.js"></script>
+    <script src="f1web.js"></script>
 </head>
 
 <body>
-    <video id='my-video' class='video-js' controls preload='auto' width='640' height='264' 
-        data-setup='{}'>
-        <source src='teamRadioTest.m3u8'video/mp4'>
-      
-        <p class='vjs-no-js'>
-            To view this video please enable JavaScript, and consider upgrading to a web browser that
-            <a href='https://videojs.com/html5-video-support/' target='_blank'>supports HTML5 video</a>
-        </p>
-    </video>
+    <video id="my-player"></video>
+
+    <script>
+        //var test = testingTeamRadio();
+        var test = testingTeamRadio();
+        // var player = videojs('my-player').ready(function(){
+        //     this.src({
+        //         type: 'application/x-mpegURL',
+        //         src: test
+        //     })
+        //     this.load();
+        //     this.play();
+        // })
+
+    </script>
+
+
+    <script>
+        // var player = videojs('my-player');
+        // player.src({
+        //     src: test,
+        //     type: 'application/x-mpegURL',
+        //     withCredentials: true
+        // })
+    //  {
+    //     type: 'application/x-mpegURL', src: test
+    // }
+    // getvi.src.type ='application/x-mpegURL';
+
+    </script>
 
     <script src='https://vjs.zencdn.net/7.5.4/video.js'></script>
 </body>

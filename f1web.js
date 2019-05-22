@@ -441,7 +441,7 @@ function getPlayableURL(assetID) { // add own function for post request
     //console.log("ASSET ID : " + assetID);
     var url = "https://f1tv.formula1.com/api/viewings/";
     //var assetID = "/api/channels/chan_9b01938bf1e94d2c942c34a74ea83636/";
-   
+
     var formattedID = "";
     var isChannel = false;
     if (assetID.includes("/api/channels/")) {
@@ -469,7 +469,7 @@ function getPlayableURL(assetID) { // add own function for post request
         return -1;
 
     }
-   // console.log(respData);
+    // console.log(respData);
     var respJSON = JSON.parse(respData);
     if (isChannel) {
         return respJSON.tokenised_url;
@@ -519,46 +519,49 @@ function getDaysBetween(date) {
     return days;
 }
 function testingTeamRadio() {
-//     var season = seasonsToArray()[1];
-//     var event = eventsToArray(season.eventoccurrence_urls)[0];
-//    // console.log(event);
-//     var session = sessionsToArray(event.sessionoccurrence_urls)[4];
-    
-//     var slug = session.slug;
+    //     var season = seasonsToArray()[1];
+    //     var event = eventsToArray(season.eventoccurrence_urls)[0];
+    //    // console.log(event);
+    //     var session = sessionsToArray(event.sessionoccurrence_urls)[4];
+
+    //     var slug = session.slug;
     var slug = "2019-australian-grand-prix-race";
-    getSessionTeamRadio(slug);
+    var file = getSessionTeamRadio(slug);
+    console.log(file);
+    return file;
 }
-function getSessionTeamRadio(slug) {
+function getSessionTeamRadio(slug, seperate) {
     console.log(slug);
     var allDrivers = new Array();
     var videoFiles = new Array();
     var sessionStreamsArray = sessionStreamsToArray(slug);
     console.log(sessionStreamsArray.length);
-    var test =0;
+    var test = 0;
     for (var x = 0; x < sessionStreamsArray.length; x++) {
         var name = sessionStreamsArray[x].name;
-        if ( name !== "pit lane"
+        if (name !== "pit lane"
             && name !== "driver"
             && name !== "data"
         ) {
-            if(name === "Main Feed"){
-                for(var a=0; a<sessionStreamsArray[x].file.length;a++){
-                    if(sessionStreamsArray[x].file[a].includes("BANDWIDTH")){ // change this to get rid of audio stream
+            if (name === "Main Feed") {
+                for (var a = 0; a < sessionStreamsArray[x].file.length; a++) {
+                    if (sessionStreamsArray[x].file[a].includes("BANDWIDTH")&&sessionStreamsArray[x].file[a+1].includes("AUDIO")) { // change this to get rid of audio stream
                         videoFiles.push(sessionStreamsArray[x].file[a]);
-                        videoFiles.push(sessionStreamsArray[x].file[a+1]);
+                        videoFiles.push(sessionStreamsArray[x].file[a + 1]);
+                        console.log(videoFiles)
                     }
                 }
                 console.log(sessionStreamsArray[x]);
-            }else{
+            } else {
 
-            
-            allDrivers.push(sessionStreamsArray[x]);
-            test++;
+
+                allDrivers.push(sessionStreamsArray[x]);
+                test++;
             }
         }
     }
     console.log("Number of drivers: " + test)
-//console.log(allDrivers);
+    //console.log(allDrivers);
     var allTeamRadio = new Array();
     for (var y = 0; y < allDrivers.length; y++) {
         for (var x = 0; x < allDrivers[y].file.length; x++) {
@@ -570,20 +573,25 @@ function getSessionTeamRadio(slug) {
             }
         }
     }
-    var finalFile = new Array();
-    finalFile.push("#EXTM3U");
-    finalFile.push("#EXT-X-INDEPENDENT-SEGMENTS"); // change to seperate file per driver // return array of blobs
-    for(var x=0; x<allTeamRadio.length;x++){
-        allTeamRadio[x].url = allTeamRadio[x].url.replace("TeamRadio",allTeamRadio[x].name);
-        finalFile.push(allTeamRadio[x].url);
-    }
-    for(var x=0; x<videoFiles.length;x++){
-        finalFile.push(videoFiles[x]);
-    }
-    for(var x=0; x<finalFile.length; x++){
-        console.log(finalFile[x]);
-    }
+    if (!seperate) {
+        var finalFile = new Array();
+        finalFile.push("#EXTM3U");
+        finalFile.push("#EXT-X-INDEPENDENT-SEGMENTS"); // change to seperate file per driver // return array of blobs
+        for (var x = 0; x < allTeamRadio.length; x++) {
+            allTeamRadio[x].url = allTeamRadio[x].url.replace("TeamRadio", allTeamRadio[x].name);
+            finalFile.push(allTeamRadio[x].url);
+        }
+        for (var x = 0; x < videoFiles.length; x++) {
+            finalFile.push(videoFiles[x]);
+        }
+        // for(var x=0; x<finalFile.length; x++){
+        //   //  console.log(finalFile[x]);
+        // }
+        return createFile(finalFile);
 
+    } else {
+
+    }
 
 
 
