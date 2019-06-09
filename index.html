@@ -43,8 +43,10 @@
   height: "100%",
   parentId: "#player",
   autoPlay: false,
+  crossOrigin: "*.formula1.com",
   mimeType: 'application/x-mpegURL',
   plugins: [LevelSelector]
+
 }
 options.hlsjsConfig = {
   xhrSetup: (xhr, url) => { xhr.withCredentials = true }
@@ -60,7 +62,7 @@ var player = new Clappr.Player(options);
                 source: sourceString,
                 autoPlay: true,
                 mimeType: 'application/x-mpegURL',
-                crossorigin: 'http://formula'
+                
 
 
             })

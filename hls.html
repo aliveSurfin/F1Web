@@ -1,0 +1,19 @@
+<html>
+    <head>
+        <script src="hls.js"></script>
+        <script src="f1web.js"></script>
+    </head>
+    <body>
+        <video id="video"></video>
+        <script>
+        if(Hls.isSupported()){
+            var hls = new Hls();
+            hls.loadSource(search());
+            hls.attachMedia(video);
+            hls.on(Hls.Events.MANIFEST_PARSED,function() {
+      video.play();
+  });
+        }
+        </script>
+    </body>
+</html>
