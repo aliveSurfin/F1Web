@@ -291,7 +291,8 @@ function search(year, event, session, stream, f1) {
     if (found === null) {
 
     } else {
-        return found.self.replace("https","http");
+       // return found.self.replace("https","http");
+       return found.self;
         var file = getFixedArray(found.self);
         var file = createFile(file);
         return file;
