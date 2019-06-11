@@ -9,7 +9,8 @@ function createVideo(videoPath) {
         //debug: true,
         xhrSetup: function(xhr, url) {
             xhr.withCredentials = true;
-            url = "https://cors.vaindil.xyz/" + url;
+            url = "https://crossorigin.me/" + url;
+            console.log("testing " + url)
 
         }
     }
