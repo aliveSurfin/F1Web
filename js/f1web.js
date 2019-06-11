@@ -12,44 +12,32 @@ function seasonsToArray() {
     var seasonJSON = getSeasonsJSON();
 
     for (var x = 0; x < seasonJSON.length; x++) {
-        seasons.push(
-            {
-                self: seasonJSON[x].name,
-                name: seasonJSON[x].name,
-                eventoccurrence_urls: seasonJSON[x].eventoccurrence_urls,
-            }
-        )
+        seasons.push({
+            self: seasonJSON[x].name,
+            name: seasonJSON[x].name,
+            eventoccurrence_urls: seasonJSON[x].eventoccurrence_urls,
+        })
     }
     return seasons;
 }
+
 function eventsToArray(eventoccurrence_urls) {
     var events = new Array();
     for (var x = 0; x < eventoccurrence_urls.length; x++) {
         var event = getEventJSON(eventoccurrence_urls[x]);
-        events.push(
-            {
-                self: event.name,
-                name: event.name,
-                official_name: event.official_name,
-                circuit_url: event.circuit_url,
-                end_date: event.end_date,
-                start_date: event.start_date,
-                sessionoccurrence_urls: event.sessionoccurrence_urls,
-
-
-
-
-
-
-
-            }
-        )
-
-        //break;
+        events.push({
+            self: event.name,
+            name: event.name,
+            official_name: event.official_name,
+            circuit_url: event.circuit_url,
+            end_date: event.end_date,
+            start_date: event.start_date,
+            sessionoccurrence_urls: event.sessionoccurrence_urls,
+        })
     }
-
     return events;
 }
+
 function sessionsToArray(sessionoccurrence_urls) {
     var sessions = new Array();
 
@@ -59,8 +47,7 @@ function sessionsToArray(sessionoccurrence_urls) {
         if (session.status === "expired") {
             continue;
         }
-        sessions.push(
-            {
+        sessions.push({
                 self: session.name,
                 name: session.name,
                 channel_urls: session.channel_urls,
@@ -72,10 +59,10 @@ function sessionsToArray(sessionoccurrence_urls) {
             }
 
         )
-        //break;
     }
     return sessions;
 }
+
 function sessionStreamsToArray(slug) {
 
     var sessionStreams = new Array();
@@ -83,24 +70,21 @@ function sessionStreamsToArray(slug) {
     sessionStreamJSON = sessionStreamJSON.objects[0];
     for (var x = 0; x < sessionStreamJSON.channel_urls.length; x++) {
         sessionStreamJSON.channel_urls[x].self = getPlayableURL(sessionStreamJSON.channel_urls[x].self);
-        var file = getFixedArray(sessionStreamJSON.channel_urls[x].self);
-        var url = createFile(file);
-
-        sessionStreams.push(
-            {
-                self: sessionStreamJSON.channel_urls[x].name,
-                name: sessionStreamJSON.channel_urls[x].name,
-                blob: url,
-                file: file,
-            }
-        )
+        // var file = getFixedArray(sessionStreamJSON.channel_urls[x].self); // M3U8 
+        // var url = createFile(file); // M3U8
+        var url = sessionStreamJSON.channel_urls[x].self;
+        //console.log(url);
+        sessionStreams.push({
+            self: sessionStreamJSON.channel_urls[x].name,
+            name: sessionStreamJSON.channel_urls[x].name,
+            blob: url,
+            //file: file, // M3U8
+        })
 
     }
     return sessionStreams;
 }
-function TESTING() {
-   return getLive();
-}
+
 function search(year, event, session, stream, f1) {
     //
     var found;
@@ -125,7 +109,7 @@ function search(year, event, session, stream, f1) {
     } else {
         year = year.trim();
     }
-    if (f1 === undefined || f1 === "" || f1 === null) {
+    if (f1 === undefined || f1 === "" || f1 === null || f1 === true) {
         f1 = true
     } else {
         f1 = false;
@@ -176,8 +160,8 @@ function search(year, event, session, stream, f1) {
             eventJSON.official_name = eventJSON.official_name.toLowerCase();
 
             event = event.toLowerCase();
-            if (eventJSON.name.includes(event)
-                || eventJSON.official_name.includes(event)
+            if (eventJSON.name.includes(event) ||
+                eventJSON.official_name.includes(event)
             ) {
                 break;
             } else {
@@ -193,6 +177,7 @@ function search(year, event, session, stream, f1) {
     //searching session
 
     if (session === "last") {
+        console.log("getting last session");
         for (var x = eventJSON.sessionoccurrence_urls.length - 1; x > -1; x--) {
             var sessionJSON = getSessionJSON(eventJSON.sessionoccurrence_urls[x]);
             console.log(sessionJSON.name);
@@ -210,16 +195,17 @@ function search(year, event, session, stream, f1) {
 
 
                     ) {
-                        console.log("*skipped- not f1");
-                        continue;
+
                     }
                 }
             }
 
             var start_time = new Date(sessionJSON.start_time)
-            if (getDaysBetween(start_time) <= 0) {
-                console.log("*found last race");
-                console.log("days between" + getDaysBetween(start_time))
+            if (getDaysBetween(start_time) <= 0.02083333333) { // 1==day // 0.02083333333 == 30 minutes(usual start time of broadcast) 
+                if (getDaysBetween(start_time) > 0) {
+                    //console.log(getDaysBetween(start_time));
+                    console.log("starting at :" + sessionJSON.start_time);
+                }
                 break;
             }
         }
@@ -228,16 +214,17 @@ function search(year, event, session, stream, f1) {
             var sessionJSON = getSessionJSON(eventJSON.sessionoccurrence_urls[x]);
             sessionJSON.name = sessionJSON.name.toLowerCase();
             sessionJSON.session_name = sessionJSON.session_name.toLowerCase();
-            if (sessionJSON.session_name.includes(session)
-                || sessionJSON.name.includes(session)
+            if (sessionJSON.session_name.includes(session) ||
+                sessionJSON.name.includes(session)
             ) {
-                if (f1) { // NEEDS TESTING 
-                    if (!sessionJSON.name.includes("f1")
-                        || sessionJSON.name.includes("f2")
-                        || sessionJSON.name.includes("f3")
+                if (f1) { // BUGS POSSIBLE // THEY KEEP CHANGING THE NAMES OF SESSIONS
+                    if (sessionJSON.name.includes("supercup") ||
+                        sessionJSON.name.includes("f2") ||
+                        sessionJSON.name.includes("f3")
+
 
                     ) {
-                        console.log("*skipped :" + sessionJSON.name);
+                        console.log("*skipped :" + sessionJSON.name + " | not f1");
                         continue;
                     }
                 }
@@ -261,7 +248,7 @@ function search(year, event, session, stream, f1) {
         for (var x = sessionStreamJSON.channel_urls.length - 1; x > -1; x--) {
             if (sessionStreamJSON.channel_urls[x].name.includes(stream)) {
                 sessionStreamJSON.channel_urls[x].self = getPlayableURL(sessionStreamJSON.channel_urls[x].self);
-                console.log("found*");
+                //console.log("found*");
                 console.log(sessionStreamJSON.channel_urls[x].name);
                 console.log(sessionStreamJSON.channel_urls[x]);
                 found = sessionStreamJSON.channel_urls[x];
@@ -273,8 +260,8 @@ function search(year, event, session, stream, f1) {
         for (var x = 0; x < sessionStreamJSON.channel_urls.length; x++) {
             sessionStreamJSON.channel_urls[x].name = sessionStreamJSON.channel_urls[x].name.toLowerCase();
             sessionStreamJSON.channel_urls[x].slug = sessionStreamJSON.channel_urls[x].slug.toLowerCase();
-            if (sessionStreamJSON.channel_urls[x].name.includes(stream)
-                || sessionStreamJSON.channel_urls[x].slug.includes(stream)
+            if (sessionStreamJSON.channel_urls[x].name.includes(stream) ||
+                sessionStreamJSON.channel_urls[x].slug.includes(stream)
             ) {
                 sessionStreamJSON.channel_urls[x].self = getPlayableURL(sessionStreamJSON.channel_urls[x].self);
                 console.log("found*");
@@ -291,8 +278,8 @@ function search(year, event, session, stream, f1) {
     if (found === null) {
 
     } else {
-       // return found.self.replace("https","http");
-       return found.self;
+        // return found.self.replace("https","http");
+        return found.self;
         var file = getFixedArray(found.self);
         var file = createFile(file);
         return file;
@@ -302,93 +289,15 @@ function search(year, event, session, stream, f1) {
 
 
 }
-function getm3u8asArray(url) {
-    var m3u8response = getRequest(url);
-    return m3u8response.split("\n");
-
-}
-function getFixedArray(url) {
-    var array = getm3u8asArray(url);
-
-    var newArray = new Array;
-
-    var urlRegex = RegExp(`[^\/]*$`);
-    url = url.replace(urlRegex, "");
-    for (var x = 0; x < array.length; x++) {
-
-        var oldLine = array[x];
-        var newLine = "";
-        if (!oldLine.includes("https")) {
-
-            if (oldLine.length > 6 &&
-                (
-                    oldLine.substring(0, 5) === "layer" ||
-                    oldLine.substring(0, 4) === "clip" ||
-                    oldLine.substring(0, 3) === "OTT"
-
-                )) {
-                newLine = url + oldLine;
-
-            } else {
-                var regex = RegExp(`[^"]*m3u8`);
-
-                var temp = oldLine.match(regex);
-                newLine = oldLine.replace(regex, url + temp);
-
-            }
 
 
-        }
-
-        if (newLine === "") {
-            newArray.push(oldLine)
-        } else {
-            // var regex2 = RegExp(`https:\/\/f1tv-cdn[^\.]*\.formula1\.com`);
-
-            // newLine = newLine.replace(regex2, "https://f1tv.secure.footprint.net")
-
-            newArray.push(newLine);
-
-        }
-        //   console.log(newArray[newArray.length-1]);
-    }
-
-    return newArray;
-
-
-}
-function createFile(array) {
-    var arrayStr = "";
-    for (var x = 0; x < array.length; x++) {
-        arrayStr += array[x];
-        arrayStr += "\n";
-    }
-    var fileBlob = new Blob([arrayStr]);
-    //var fileurl = window.webkitURL.createObjectURL(fileBlob);
-    var newFile = new File(array, "master.m3u8");
-
-    var data = new Blob([arrayStr], { type: 'video/m3u8' });
-
-    return window.URL.createObjectURL(data);
-
-
-
-}
-function downloadFile(file) {
-    var a = document.createElement("a");
-    url = URL.createObjectURL(file);
-    a.href = url;
-    a.download = file.name;
-    document.body.appendChild(a);
-    a.click();
-
-}
 function getRequest(URL) {
     var xmlHTTP = new XMLHttpRequest();
     xmlHTTP.open("GET", cors + URL, false);
     xmlHTTP.send(null);
     return xmlHTTP.responseText;
 }
+
 function getSeasonsJSON() {
     var seasonJSON = JSON.parse(getRequest(seasonUrl));
     seasonJSON = seasonJSON.objects;
@@ -406,6 +315,7 @@ function getSessionJSON(sessionoccurence_url) {
     var sessionJSON = JSON.parse(getRequest(sessionURL));
     return sessionJSON;
 }
+
 function getSessionStreamsJSON(slug) {
     var sessionStreamURL = sessionURLstart + slug;
     var sessionStreamJSON = JSON.parse(getRequest(sessionStreamURL));
@@ -419,6 +329,7 @@ function getSessionStreamsJSON(slug) {
     }
     return sessionStreamJSON;
 }
+//UNUSED
 function addCorrectURLs(sessionStreamJSON) {
     sessionStreamJSON.objects[0].urls = new Array(sessionStreamJSON.objects[0].channel_urls.length);
     for (var x = 0; x < sessionStreamJSON.objects[0].channel_urls.length; x++) {
@@ -470,9 +381,9 @@ function getPlayableURL(assetID) { // add own function for post request
     // console.log(respData);
     var respJSON = JSON.parse(respData);
     if (isChannel) {
-        var finalUrl =  respJSON.tokenised_url;
+        var finalUrl = respJSON.tokenised_url;
         // console.log(finalUrl);
-        console.log(finalUrl);
+        //console.log(finalUrl);
     } else {
         console.log("************");
         console.log(respJSON);
@@ -486,6 +397,17 @@ function getPlayableURL(assetID) { // add own function for post request
 
 }
 
+function getDaysBetween(date) {
+    var now = new Date();
+    // console.log(now);
+    //console.log(date);
+    var seconds = parseInt((date - now) / 1000);
+    var minutes = seconds / 60;
+    var hours = minutes / 60;
+    var days = hours / 24;
+    //console.log(days);
+    return days;
+}
 
 
 
@@ -495,6 +417,17 @@ function parseDate(dateString) {
     return date;
 
 }
+
+
+
+
+
+
+
+
+
+
+// UNUSED FUNCTIONS AS OF 11/06/2019 //*****************************
 function isWithinWeek(date) {
     var now = new Date();
     // console.log(now);
@@ -509,29 +442,7 @@ function isWithinWeek(date) {
     }
     return false;
 }
-function getDaysBetween(date) {
-    var now = new Date();
-    // console.log(now);
-    //console.log(date);
-    var seconds = parseInt((date - now) / 1000);
-    var minutes = seconds / 60;
-    var hours = minutes / 60;
-    var days = hours / 24;
-    //console.log(days);
-    return days;
-}
-function testingTeamRadio() {
-    //     var season = seasonsToArray()[1];
-    //     var event = eventsToArray(season.eventoccurrence_urls)[0];
-    //    // console.log(event);
-    //     var session = sessionsToArray(event.sessionoccurrence_urls)[4];
 
-    //     var slug = session.slug;
-    var slug = "2019-australian-grand-prix-race";
-    var file = getSessionTeamRadio(slug);
-    console.log(file);
-    return file;
-}
 function getSessionTeamRadio(slug, seperate) {
     console.log(slug);
     var allDrivers = new Array();
@@ -541,13 +452,13 @@ function getSessionTeamRadio(slug, seperate) {
     var test = 0;
     for (var x = 0; x < sessionStreamsArray.length; x++) {
         var name = sessionStreamsArray[x].name;
-        if (name !== "pit lane"
-            && name !== "driver"
-            && name !== "data"
+        if (name !== "pit lane" &&
+            name !== "driver" &&
+            name !== "data"
         ) {
             if (name === "Main Feed") {
                 for (var a = 0; a < sessionStreamsArray[x].file.length; a++) {
-                    if (sessionStreamsArray[x].file[a].includes("BANDWIDTH")&&sessionStreamsArray[x].file[a+1].includes("AUDIO")) { // change this to get rid of audio stream
+                    if (sessionStreamsArray[x].file[a].includes("BANDWIDTH") && sessionStreamsArray[x].file[a + 1].includes("AUDIO")) { // change this to get rid of audio stream
                         videoFiles.push(sessionStreamsArray[x].file[a]);
                         videoFiles.push(sessionStreamsArray[x].file[a + 1]);
                         console.log(videoFiles)
@@ -563,7 +474,7 @@ function getSessionTeamRadio(slug, seperate) {
         }
     }
     console.log("Number of drivers: " + test)
-    //console.log(allDrivers);
+        //console.log(allDrivers);
     var allTeamRadio = new Array();
     for (var y = 0; y < allDrivers.length; y++) {
         for (var x = 0; x < allDrivers[y].file.length; x++) {
@@ -599,34 +510,134 @@ function getSessionTeamRadio(slug, seperate) {
 
 }
 
-function getHomepageContent(){
+
+function testingTeamRadio() {
+    //     var season = seasonsToArray()[1];
+    //     var event = eventsToArray(season.eventoccurrence_urls)[0];
+    //    // console.log(event);
+    //     var session = sessionsToArray(event.sessionoccurrence_urls)[4];
+
+    //     var slug = session.slug;
+    var slug = "2019-australian-grand-prix-race";
+    var file = getSessionTeamRadio(slug);
+    console.log(file);
+    return file;
+}
+
+//UNUSED
+function getm3u8asArray(url) {
+    var m3u8response = getRequest(url);
+    return m3u8response.split("\n");
+
+}
+// UNUSED
+function getFixedArray(url) {
+    var array = getm3u8asArray(url);
+
+    var newArray = new Array;
+
+    var urlRegex = RegExp(`[^\/]*$`);
+    url = url.replace(urlRegex, "");
+    for (var x = 0; x < array.length; x++) {
+
+        var oldLine = array[x];
+        var newLine = "";
+        if (!oldLine.includes("https")) {
+
+            if (oldLine.length > 6 &&
+                (
+                    oldLine.substring(0, 5) === "layer" ||
+                    oldLine.substring(0, 4) === "clip" ||
+                    oldLine.substring(0, 3) === "OTT"
+
+                )) {
+                newLine = url + oldLine;
+
+            } else {
+                var regex = RegExp(`[^"]*m3u8`);
+
+                var temp = oldLine.match(regex);
+                newLine = oldLine.replace(regex, url + temp);
+
+            }
+
+
+        }
+
+        if (newLine === "") {
+            newArray.push(oldLine)
+        } else {
+            // var regex2 = RegExp(`https:\/\/f1tv-cdn[^\.]*\.formula1\.com`);
+
+            // newLine = newLine.replace(regex2, "https://f1tv.secure.footprint.net")
+
+            newArray.push(newLine);
+
+        }
+        //   console.log(newArray[newArray.length-1]);
+    }
+
+    return newArray;
+
+
+}
+//UNUSED
+function createFile(array) {
+    var arrayStr = "";
+    for (var x = 0; x < array.length; x++) {
+        arrayStr += array[x];
+        arrayStr += "\n";
+    }
+    var fileBlob = new Blob([arrayStr]);
+    //var fileurl = window.webkitURL.createObjectURL(fileBlob);
+    var newFile = new File(array, "master.m3u8");
+
+    var data = new Blob([arrayStr], { type: 'video/m3u8' });
+
+    return window.URL.createObjectURL(data);
+
+
+
+}
+//UNUSED
+function downloadFile(file) {
+    var a = document.createElement("a");
+    url = URL.createObjectURL(file);
+    a.href = url;
+    a.download = file.name;
+    document.body.appendChild(a);
+    a.click();
+
+}
+
+function getHomepageContent() {
     var jsonHome = JSON.parse(getRequest("https://f1tv.formula1.com/api/sets/?slug=home&fields=slug,set_type_slug,items,items__position,items__content_type,items__display_type,items__content_url,items__content_url__uid,items__content_url__self,items__content_url__set_type_slug,items__content_url__display_type_slug,items__content_url__title,items__content_url__items,items__content_url__items__set_type_slug,items__content_url__items__position,items__content_url__items__content_type,items__content_url__items__content_url,items__content_url__items__content_url__self,items__content_url__items__content_url__uid&fields_to_expand=items__content_url,items__content_url__items__content_url"));
     return jsonHome;
     console.log(jsonHome);
 }
 
-function getLive(){
-   var jsonHome = getHomepageContent();
-   //.Objects[0].Items[0].ContentURL.Items[0].ContentURL.Self
-   var firstContent = jsonHome.objects[0].items[0].content_url.items[0].content_url.self;
-    if(firstContent.includes("/api/event-occurrence/")){
+function getLive() {
+    var jsonHome = getHomepageContent();
+    //.Objects[0].Items[0].ContentURL.Items[0].ContentURL.Self
+    var firstContent = jsonHome.objects[0].items[0].content_url.items[0].content_url.self;
+    if (firstContent.includes("/api/event-occurrence/")) {
         var event = getEventJSON(firstContent);
-        for(let i=0; i<event.sessionoccurrence_urls.length;i++){
+        for (let i = 0; i < event.sessionoccurrence_urls.length; i++) {
             var session = event.sessionoccurrence_urls[i];
             session = getSessionJSON(session);
-            if(session.status=="live"){
+            if (session.status == "live") {
                 console.log(session.name);
                 var sessionStreams = getSessionStreamsJSON(session.slug);
                 console.log(sessionStreams);
                 sessionStreams = sessionStreams.objects[0];
-            var test = getPlayableURL(sessionStreams.channel_urls[0].self);
-            console.log(test);
-            //return test;
-            var file = getFixedArray(test);
-            file = createFile(file);
-            return file;
-        }
+                var test = getPlayableURL(sessionStreams.channel_urls[0].self);
+                console.log(test);
+                //return test;
+                var file = getFixedArray(test);
+                file = createFile(file);
+                return file;
+            }
         }
     }
-   //console.log(firstContent)
-};
+    //console.log(firstContent)
+}

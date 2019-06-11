@@ -4,12 +4,11 @@
 
 <head>
 
-    <script src="f1web.js"></script>
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/clappr@latest/dist/clappr.min.js"></script>
-    <script type="text/javascript"
-        src="//cdn.jsdelivr.net/gh/clappr/clappr-level-selector-plugin@latest/dist/level-selector.min.js"></script>
-    <link rel="stylesheet" href="reset.css">
-    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+    <script src="/js/f1web.js"></script>
+    <script src="/js/hlsJsSetup.js"></script>
+    <link rel="stylesheet" href="/css/reset.css">
+    <link rel="stylesheet" href="/css/style.css">
 </head>
 
 <body>
@@ -19,30 +18,14 @@
             <select name="Event" id="eventSelect"></select>
             <select name="Session" id="sessionSelect"></select>
             <select name="Stream" id="streamSelect"></select>
-           
+
         </div>
-        
+
         <button id="showHideButton" onclick="hideSelects()">Hide Menu</button>
     </div>
-    <div id="player"></div>
-    <script>
-        var width = window.innerWidth * .8;
-        var height = window.innerHeight * .8;
-        var player = new Clappr.Player({
-            width: "100%",
-            height: "100%",
-            parentId: "#player",
-            autoPlay: false,
-            mimeType: 'application/x-mpegURL',
-            plugins: [LevelSelector]
-        });
-        
-
-
-    </script>
+    <div id="videoDiv"></div>
 
     <script>
-
         var array = seasonsToArray();
         var select = document.getElementById("seasonSelect");
         //select.setAttribute("size", array.length);
@@ -65,7 +48,7 @@
             var eventoccurrence_urls = seasonSelect[seasonSelect.selectedIndex].object.eventoccurrence_urls;
             var array = eventsToArray(eventoccurrence_urls);
             removeOptions(eventSelect);
-           // eventSelect.setAttribute("size", array.length);
+            // eventSelect.setAttribute("size", array.length);
             for (var x = 0; x < array.length; x++) {
                 var opt = document.createElement('option');
 
@@ -80,6 +63,7 @@
             enableSelects();
 
         }
+
         function updateSessions() {
             disableSelects();
 
@@ -88,7 +72,7 @@
             var sessionoccurrence_urls = eventSelect[eventSelect.selectedIndex].object.sessionoccurrence_urls;
             var array = sessionsToArray(sessionoccurrence_urls);
             removeOptions(sessionSelect);
-           // sessionSelect.setAttribute("size", array.length);
+            // sessionSelect.setAttribute("size", array.length);
             for (var x = 0; x < array.length; x++) {
                 var opt = document.createElement('option');
                 opt.innerHTML = array[x].self;
@@ -101,6 +85,7 @@
             enableSelects();
 
         }
+
         function updateStreams() {
             disableSelects();
 
@@ -116,7 +101,7 @@
                 return;
             } else if (array.length === 1) {
                 enableSelects();
-              
+
                 changeSource(array[0].blob);
                 return;
             }
@@ -131,16 +116,18 @@
 
             enableSelects();
         }
+
         function changeStream() {
             disableSelects();
 
             var streamSelect = document.getElementById("streamSelect");
             var blob = streamSelect[streamSelect.selectedIndex].object.blob;
-           
+
             changeSource(blob);
 
             enableSelects();
         }
+
         function disableSelects() {
             var seasonSelect = document.getElementById("seasonSelect");
             var eventSelect = document.getElementById("eventSelect");
@@ -151,6 +138,7 @@
             sessionSelect.disabled = true;
             streamSelect.disabled = true;
         }
+
         function enableSelects() {
             var seasonSelect = document.getElementById("seasonSelect");
             var eventSelect = document.getElementById("eventSelect");
@@ -161,16 +149,17 @@
             sessionSelect.disabled = false;
             streamSelect.disabled = false;
         }
+
         function hideSelects() {
-           
+
             var seasonSelect = document.getElementById("seasonSelect");
-            if(seasonSelect.style.display==="none"){
+            if (seasonSelect.style.display === "none") {
                 showSelects();
                 var button = document.getElementById("showHideButton");
                 button.innerHTML = "Hide Menu";
                 return;
             }
-            
+
             var eventSelect = document.getElementById("eventSelect");
             var sessionSelect = document.getElementById("sessionSelect");
             var streamSelect = document.getElementById("streamSelect");
@@ -179,10 +168,11 @@
             sessionSelect.style.display = "none";
             streamSelect.style.display = "none";
             var button = document.getElementById("showHideButton");
-                button.innerHTML = "Show Menu";
+            button.innerHTML = "Show Menu";
 
 
         }
+
         function showSelects() {
             var seasonSelect = document.getElementById("seasonSelect");
             var eventSelect = document.getElementById("eventSelect");
@@ -205,8 +195,9 @@
             }
             //selectbox.setAttribute("size", 0);
         }
-        function setNoSelected(selectbox){
-            selectbox.selectedIndex= -1;
+
+        function setNoSelected(selectbox) {
+            selectbox.selectedIndex = -1;
         }
     </script>
     <script>
@@ -215,18 +206,9 @@
     <script>
         function changeSource(sourceString) {
             console.log("Switching to : " + sourceString)
-            console.log(player.core.getCurrentPlayback().name);
-            player.configure({
-
-                source: sourceString,
-                autoPlay: true,
-                mimeType: 'application/x-mpegURL',
-
-
-            })
-
+            document.getElementById("videoDiv").appendChild(createVideo(sourceString));
+            document.getElementById("videoDiv").childNodes[0].controls = true;
         }
-
     </script>
 
 </body>

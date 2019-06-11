@@ -1,46 +1,44 @@
+body {
+    background-color: black;
+}
 
-
-h1{
+h1 {
     color: white;
     float: right;
 }
-#menu{
+
+#menu {
     background-color: black;
     width: 100%;
-    
 }
 
-
-#menu #menuSelects{
-    
-   width: 80%;
-   float: left;
-
+#menu #menuSelects {
+    width: 80%;
+    float: left;
 }
-#menu #menuSelects select{
+
+#menu #menuSelects select {
     color: white;
     background-color: black;
     border-color: black;
     border: 0;
-    
     width: auto;
-   
- 
 }
 
-
-#menu #showHideButton{
+#menu #showHideButton {
     width: auto;
     padding: auto;
     background-color: black;
     color: white;
-    
 }
 
-video{
+video {
+    display: inline-block;
+    height: 100%;
+    max-height: 100%;
     max-width: 100%;
-    height: auto;
 }
 
-
-
+#videoDiv {
+    text-align: center;
+}
