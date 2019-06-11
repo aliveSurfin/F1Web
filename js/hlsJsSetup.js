@@ -1,4 +1,5 @@
 function createVideo(videoPath) {
+    console.log(videoPath);
     if (!Hls.isSupported) {
         console.log("HLS NOT SUPPORTED");
         return document.createElement("video").innerHTML("HLS NOT SUPPORTED");
