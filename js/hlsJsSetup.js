@@ -7,15 +7,25 @@ function createVideo(videoPath) {
     var video = document.createElement("video"); //.controls = true;
     var config = {
         //debug: true,
+
         xhrSetup: function(xhr, url) {
-            xhr.withCredentials = true;
-            url = "https://crossorigin.me/" + url;
-            console.log("testing " + url)
+
+            // xhr.withCredentials = true;
+
+
+
+
+
+
+            //console.log(xhr);
+            //xhr.open(this.type, this.url.replace("https://", "https://cors.vaindil.xyz/" + "https://"), this.async);
 
         }
     }
     var hls = new Hls(config);
+
     hls.loadSource(videoPath);
+
     hls.on(Hls.Events.MANIFEST_PARSED, function() {
         console.log(hls);
     });

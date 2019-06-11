@@ -279,7 +279,7 @@ function search(year, event, session, stream, f1) {
 
     } else {
         // return found.self.replace("https","http");
-        //return found.self;
+        return found.self;
         var file = getFixedArray(found.self);
         var file = createFile(file);
         return file;
