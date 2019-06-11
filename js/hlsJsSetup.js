@@ -31,6 +31,7 @@ function createHls(videoPath) {
         //debug: true,
         xhrSetup: function(xhr, url) {
             xhr.withCredentials = true;
+            xhr.setRequestHeader('CORS', "http://localhost")
         }
     }
     var hls = new Hls(config);
