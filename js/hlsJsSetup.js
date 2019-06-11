@@ -9,7 +9,8 @@ function createVideo(videoPath) {
         //debug: true,
         xhrSetup: function(xhr, url) {
             xhr.withCredentials = true;
-            xhr.setRequestHeader('Origin', "http://localhost")
+            url = "https://cors.vaindil.xyz/" + url;
+
         }
     }
     var hls = new Hls(config);
