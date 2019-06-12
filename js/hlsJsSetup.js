@@ -12,9 +12,10 @@ function createVideo(videoPath) {
 
     hls.on(Hls.Events.MANIFEST_PARSED, function() {
         console.log("manifest parsed")
-        video.play();
+
     });
     hls.attachMedia(video);
+    video.autoplay = true;
 
     return video;
 }
