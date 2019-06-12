@@ -5,29 +5,13 @@ function createVideo(videoPath) {
         return document.createElement("video").innerHTML("HLS NOT SUPPORTED");
     }
     var video = document.createElement("video"); //.controls = true;
-    var config = {
-        //debug: true,
 
-        xhrSetup: function(xhr, url) {
-
-            // xhr.withCredentials = true;
-
-
-
-
-
-
-            //console.log(xhr);
-            //xhr.open(this.type, this.url.replace("https://", "https://cors.vaindil.xyz/" + "https://"), this.async);
-
-        }
-    }
-    var hls = new Hls(config);
+    var hls = new Hls();
 
     hls.loadSource(videoPath);
 
     hls.on(Hls.Events.MANIFEST_PARSED, function() {
-        console.log(hls);
+        console.log("manifest parsed")
     });
     hls.attachMedia(video);
 

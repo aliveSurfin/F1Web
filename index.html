@@ -2,20 +2,42 @@
 
 <head>
     <script>
+        function setToken(token) {
+            document.getElementById("token").token = token;
+        }
+
+        function getToken() {
+
+        }
         let oldXHROpen = window.XMLHttpRequest.prototype.open;
         window.XMLHttpRequest.prototype.open = function(method, url, async, user, password) {
-            console.log(typeof(url));
+            //  console.log(typeof(url));
+            var cors = "https://cors.vaindil.xyz/";
+            cors = "https://secret-chamber-30285.herokuapp.com/";
+            cors = "https://salty-tor-55405.herokuapp.com/";
+            cors = "";
             // console.log(url.substring(url.length - 5) == ".m3u8");
-            if (url.substring(url.length - 5) == ".m3u8") {
+            if (!url.includes("api")) {
                 this.withCredentials = true;
+                url = cors + url;
+
             }
+            // if (url.includes("token")) {
+            //     let token = url.substring(url.indexOf(("?nva")));
+            //     setToken(token);
+            // }
+            // this
             // do something with the method, url and etc.
-            // this.addEventListener('load', function() {
-            //     // do something with the response text
-            //     console.log('load: ' + this.responseText);
-            // });
+            this.addEventListener('load', function() {
+                //console.log(this);
+            });
 
             return oldXHROpen.apply(this, arguments);
+        }
+        let oldXHRSend = window.XMLHttpRequest.prototype.send;
+        window.XMLHttpRequest.prototype.send = function(data) {
+            console.log(this);
+            return oldXHRSend.apply(this, arguments);
         }
     </script>
 
@@ -27,16 +49,18 @@
 </head>
 
 <body>
-    <script>
-        // xhook.before(function(request) {
-        //     request.url = "https://cors.vaindil.xyz/" + request.url;
-        // })
-    </script>
-    <div id="videoDiv"></div>
-    <script>
-        document.getElementById("videoDiv").appendChild(createVideo(search()));
-        console.log(document.getElementById("videoDiv").childNodes[0].controls = true);
-    </script>
+    < div id="token">
+        < /div>
+            <script>
+                // xhook.before(function(request) {
+                //     request.url = "https://cors.vaindil.xyz/" + request.url;
+                // })
+            </script>
+            <div id="videoDiv"></div>
+            <script>
+                document.getElementById("videoDiv").appendChild(createVideo(search()));;
+                //console.log(document.getElementById("videoDiv").childNodes[0].controls = true);
+            </script>
 </body>
 
 </html>

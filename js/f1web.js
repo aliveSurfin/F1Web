@@ -1,6 +1,7 @@
 var cors2 = "https://cors-anywhere.herokuapp.com/";
 // cors2 = "https://cors.io/";
 var cors = "https://cors.vaindil.xyz/";
+// cors = "https://secret-chamber-30285.herokuapp.com";
 
 var seasonUrl = "https://f1tv.formula1.com/api/race-season/?fields=year,name,self,has_content,eventoccurrence_urls&year__gt=2017&order=year"
 var urlStart = "https://f1tv.formula1.com"
