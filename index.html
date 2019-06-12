@@ -2,13 +2,6 @@
 
 <head>
     <script>
-        function setToken(token) {
-            document.getElementById("token").token = token;
-        }
-
-        function getToken() {
-
-        }
         let oldXHROpen = window.XMLHttpRequest.prototype.open;
         window.XMLHttpRequest.prototype.open = function(method, url, async, user, password) {
             //  console.log(typeof(url));
@@ -22,12 +15,7 @@
                 url = cors + url;
 
             }
-            // if (url.includes("token")) {
-            //     let token = url.substring(url.indexOf(("?nva")));
-            //     setToken(token);
-            // }
-            // this
-            // do something with the method, url and etc.
+
             this.addEventListener('load', function() {
                 //console.log(this);
             });
@@ -49,18 +37,14 @@
 </head>
 
 <body>
-    < div id="token">
-        < /div>
-            <script>
-                // xhook.before(function(request) {
-                //     request.url = "https://cors.vaindil.xyz/" + request.url;
-                // })
-            </script>
-            <div id="videoDiv"></div>
-            <script>
-                document.getElementById("videoDiv").appendChild(createVideo(search()));;
-                //console.log(document.getElementById("videoDiv").childNodes[0].controls = true);
-            </script>
+
+    // xhook.before(function(request) { // request.url = "https://cors.vaindil.xyz/" + request.url; // })
+    </script>
+    <div id="videoDiv"></div>
+    <script>
+        document.getElementById("videoDiv").appendChild(createVideo(search()));;
+        console.log(document.getElementById("videoDiv").childNodes[0].controls = true);
+    </script>
 </body>
 
 </html>
