@@ -1,34 +1,8 @@
 <html>
 
 <head>
-    <script>
-        let oldXHROpen = window.XMLHttpRequest.prototype.open;
-        window.XMLHttpRequest.prototype.open = function(method, url, async, user, password) {
-            //  console.log(typeof(url));
-            var cors = "https://cors.vaindil.xyz/";
-            cors = "https://secret-chamber-30285.herokuapp.com/";
-            cors = "https://salty-tor-55405.herokuapp.com/";
-            cors = "";
-            // console.log(url.substring(url.length - 5) == ".m3u8");
-            if (!url.includes("api")) {
-                this.withCredentials = true;
-                url = cors + url;
-
-            }
-
-            this.addEventListener('load', function() {
-                //console.log(this);
-            });
-
-            return oldXHROpen.apply(this, arguments);
-        }
-        let oldXHRSend = window.XMLHttpRequest.prototype.send;
-        window.XMLHttpRequest.prototype.send = function(data) {
-            console.log(this);
-            return oldXHRSend.apply(this, arguments);
-        }
-    </script>
-
+    <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
+    <script src="js/withCredXHR.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     <script src="js/f1web.js"></script>
     <script src="js/hlsJsSetup.js"></script>
