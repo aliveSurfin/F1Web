@@ -1,0 +1,36 @@
+<html>
+
+<head>
+    <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
+    <script src="js/withCredXHR.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/clappr@latest/dist/clappr.min.js"></script>
+    <script src="js/level-selector.js"></script>
+    <script src="js/f1web.js"></script>
+    <link rel="stylesheet" href="css/reset.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <div id="player"></div>
+    <script>
+        var source = search();
+        var player = new Clappr.Player({
+            autoplay: true,
+            source: source,
+            parentId: "#player",
+            mediacontrol: {
+                seekbar: "#E113D3",
+                buttons: "#66B2FF"
+            },
+            hideMediaControlDelay: 2000,
+            plugins: [LevelSelector],
+            width: "100%",
+            height: "100%",
+            actualLiveTime: true
+
+
+        });
+    </script>
+</body>
+
+</html>
