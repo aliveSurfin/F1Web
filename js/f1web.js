@@ -93,7 +93,7 @@ function sessionStreamsToArray(slug, m3u8) {
     return sessionStreams;
 }
 
-function search(year, event, session, stream, f1) {
+function search(year, event, session, stream, f1, file) {
     //
     var found;
     // defaults
@@ -199,11 +199,14 @@ function search(year, event, session, stream, f1) {
             } else {
                 if (f1 === true) {
                     // console.log(sessionJSON.session_name);
-                    if (!sessionJSON.name.includes("F1") // needs fiddling
+                    if (sessionJSON.name.includes("supercup") ||
+                        sessionJSON.name.includes("f2") ||
+                        sessionJSON.name.includes("f3")
 
 
                     ) {
-
+                        console.log("*skipped :" + sessionJSON.name + " | not f1");
+                        continue;
                     }
                 }
             }
@@ -287,7 +290,9 @@ function search(year, event, session, stream, f1) {
 
     } else {
         // return found.self.replace("https","http");
-        return found.self;
+        if (!file || file === null || file === undefined) {
+            return found.self;
+        }
         var file = getFixedArray(found.self);
         var file = createFile(file);
         return file;
