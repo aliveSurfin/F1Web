@@ -197,6 +197,7 @@ function search(year, event, session, stream, f1, file) {
         console.log("getting last session");
         for (var x = eventJSON.sessionoccurrence_urls.length - 1; x > -1; x--) {
             var sessionJSON = getSessionJSON(eventJSON.sessionoccurrence_urls[x]);
+            sessionJSON.name = sessionJSON.name.toLowerCase();
             console.log(sessionJSON.name);
             if (sessionJSON.slug.includes("high-speed-test")
 
