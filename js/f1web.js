@@ -94,6 +94,15 @@ function sessionStreamsToArray(slug, m3u8) {
 }
 
 function search(year, event, session, stream, f1, file) {
+    if(arguments.length===0){
+        stream = null;
+        session=null;
+        event = null;
+        year = null;
+        f1=null;
+        file = false;
+        
+    }
     //
     var found;
     // defaults
