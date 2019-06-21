@@ -193,7 +193,7 @@ function search(year, event, session, stream, f1, file) {
 
     //searching session
 
-    if (session === "last") {
+    if (session == "last") {
         console.log("getting last session");
         for (var x = eventJSON.sessionoccurrence_urls.length - 1; x > -1; x--) {
             var sessionJSON = getSessionJSON(eventJSON.sessionoccurrence_urls[x]);
