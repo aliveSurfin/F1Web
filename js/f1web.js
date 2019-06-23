@@ -641,9 +641,8 @@ function getHomepageContent() {
     console.log(jsonHome);
 }
 
-function getLive() {
+function getLive(stream) {
     var jsonHome = getHomepageContent();
-    //.Objects[0].Items[0].ContentURL.Items[0].ContentURL.Self
     var firstContent = jsonHome.objects[0].items[0].content_url.items[0].content_url.self;
     if (firstContent.includes("/api/event-occurrence/")) {
         var event = getEventJSON(firstContent);
@@ -655,15 +654,25 @@ function getLive() {
                 var sessionStreams = getSessionStreamsJSON(session.slug);
                 console.log(sessionStreams);
                 sessionStreams = sessionStreams.objects[0];
-                var test = getPlayableURL(sessionStreams.channel_urls[0].self);
-                console.log(test);
-                //return test;
+                var stream;
+                if(stream!==undefined){
+                    for(let x=0; x<sessionStreams.channel_urls.length;x++){
+                        if(sessionStreams.channel_urls[x].name.toLowerCase().includes(stream.toLowerCase())){
+                            stream = getPlayableURL(sessionStreams.channel_urls[x].self);
+                            break;
+                        }
+                    }
+                }else{
+                stream = getPlayableURL(sessionStreams.channel_urls[0].self);
+                }
+                return stream;
                 var file = getFixedArray(test);
                 file = createFile(file);
                 return file;
             }
         }
     }
+    return null;
     //console.log(firstContent)
 }
 
