@@ -1,5 +1,8 @@
 # F1 Web Viewer
-Javascript file to grab vods & live races from the f1tv api
+Javascript file to grab vods & live races from the f1tv api <br/>
+https://alivesurfin.github.io/F1Web/ <br/>
+https://alivesurfin.github.io/F1Web/data.html <br/>
+https://alivesurfin.github.io/F1Web/selector.html <br/>
 
 ## Getting Started
 Main function of the js file is 
