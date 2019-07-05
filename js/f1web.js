@@ -328,7 +328,7 @@ function getSeasonsJSON() {
 }
 
 function getEventJSON(eventoccurrence_url) {
-    var eventURL = cors + urlStart + eventoccurrence_url;
+    var eventURL = urlStart + eventoccurrence_url;
     var eventJSON = JSON.parse(getRequest(eventURL));
     return eventJSON;
 }
