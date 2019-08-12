@@ -643,6 +643,9 @@ function getHomepageContent() {
 
 function getLive(stream) {
     var jsonHome = getHomepageContent();
+    if(jsonHome.objects[0].items[0].content_url.items[0].content_url==null){
+        return null;
+    }
     var firstContent = jsonHome.objects[0].items[0].content_url.items[0].content_url.self;
     if (firstContent.includes("/api/event-occurrence/")) {
         var event = getEventJSON(firstContent);
