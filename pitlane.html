@@ -1,0 +1,44 @@
+<html>
+
+<head>
+    <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
+    <script src="js/withCredXHR.js"></script>
+
+    <script src="js/f1web.js"></script>
+    <link rel="stylesheet" href="css/reset.css">
+    <link rel="stylesheet" href="css/style.css">
+
+    <!-- clappr -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/clappr@latest/dist/clappr.min.js"></script>
+    <script src="js/level-selector.js"></script>
+    <script src="js/audio-track-selector.js"></script>
+</head>
+
+<body>
+    <div id="player"></div>
+    <script>
+         var source = getLive("pit lane");
+        if(source===null){
+            source = search("","","","pit lane",true,false);
+        }
+        var player = new Clappr.Player({
+            autoplay: true,
+            source: source,
+            parentId: "#player",
+            mediacontrol: {
+                seekbar: "#FF2D00",
+                buttons: "#FFFFFF"
+            },
+            hideMediaControlDelay: 2000,
+            plugins: [LevelSelector, AudioSelector],
+            width: "100%",
+            height: "100%",
+            actualLiveTime: true
+
+
+        });
+        player.play();
+    </script>
+</body>
+
+</html>
