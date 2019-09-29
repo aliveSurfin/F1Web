@@ -1,4 +1,4 @@
-var cors2 = "https://cors-anywhere.herokuapp.com/"; 
+var cors2 = "https://cors-anywhere.herokuapp.com/";
 // cors2 = "https://cors.io/";
 var cors = "https://cors.vaindil.xyz/"; // GET PROXY
 var cors2 = "https://cors-f1web.herokuapp.com/"; // POST PROXY
@@ -51,15 +51,15 @@ function sessionsToArray(sessionoccurrence_urls) {
             continue;
         }
         sessions.push({
-                self: session.name,
-                name: session.name,
-                channel_urls: session.channel_urls,
-                status: session.status,
-                slug: session.slug,
-                start_time: session.start_time,
-                end_time: session.end_time,
+            self: session.name,
+            name: session.name,
+            channel_urls: session.channel_urls,
+            status: session.status,
+            slug: session.slug,
+            start_time: session.start_time,
+            end_time: session.end_time,
 
-            }
+        }
 
         )
     }
@@ -94,14 +94,14 @@ function sessionStreamsToArray(slug, m3u8) {
 }
 
 function search(year, event, session, stream, f1, file) {
-    if(arguments.length===0){
+    if (arguments.length === 0) {
         stream = null;
-        session=null;
+        session = null;
         event = null;
         year = null;
-        f1=null;
+        f1 = null;
         file = false;
-        
+
     }
     //
     var found;
@@ -391,20 +391,22 @@ function getPlayableURL(assetID) { // add own function for post request
     xhr.open('POST', cors2 + url, false);
 
     xhr.send(x);
-    // if (xhr.status !== 200) {
-    //     console.log(xhr.responseText);
-    // }
+    if (xhr.status == 400) {
+        console.log(xhr.responseText);
+    }
     var respData = xhr.responseText;
 
     if (respData.includes("form_validation_errors")) {
 
-        return -1;
+        // return -1;
 
     }
-    // console.log(respData);
+    console.log(respData);
     var respJSON = JSON.parse(respData);
+
+    var finalUrl = "";
     if (isChannel) {
-        var finalUrl = respJSON.tokenised_url;
+        finalUrl = respJSON.tokenised_url;
         // console.log(finalUrl);
         //console.log(finalUrl);
     } else {
@@ -413,6 +415,7 @@ function getPlayableURL(assetID) { // add own function for post request
         return -2;
     }
     // finalUrl.replace("&","\x26");
+    console.log(finalUrl);
     return finalUrl;
 
 
@@ -504,7 +507,7 @@ function getSessionTeamRadio(slug, seperate) {
         //return videoFiles;
     }
     console.log("Number of drivers: " + test)
-        //console.log(allDrivers);
+    //console.log(allDrivers);
     var allTeamRadio = new Array();
     for (var y = 0; y < allDrivers.length; y++) {
         for (var x = 0; x < allDrivers[y].file.length; x++) {
@@ -642,12 +645,17 @@ function getHomepageContent() {
 }
 
 function getLive(stream) {
+    console.log("attempting to get live");
     var jsonHome = getHomepageContent();
-    if(jsonHome.objects[0].items[0].content_url.items[0].content_url==null){
-        return null;
+    for (let x = 0; x < jsonHome.objects[0].items.length; x++) {
+        var found = false;
+        var firstContent = jsonHome.objects[0].items[x].content_url.self;
+        if (firstContent.includes("/api/event-occurrence/")) {
+            found = true;
+            break;
+        }
     }
-    var firstContent = jsonHome.objects[0].items[0].content_url.items[0].content_url.self;
-    if (firstContent.includes("/api/event-occurrence/")) {
+    if (found) {
         var event = getEventJSON(firstContent);
         for (let i = 0; i < event.sessionoccurrence_urls.length; i++) {
             var session = event.sessionoccurrence_urls[i];
@@ -658,24 +666,28 @@ function getLive(stream) {
                 console.log(sessionStreams);
                 sessionStreams = sessionStreams.objects[0];
                 var stream;
-                if(stream!==undefined){
-                    for(let x=0; x<sessionStreams.channel_urls.length;x++){
-                        if(sessionStreams.channel_urls[x].name.toLowerCase().includes(stream.toLowerCase())){
+                if (stream !== undefined) {
+                    for (let x = 0; x < sessionStreams.channel_urls.length; x++) {
+                        if (sessionStreams.channel_urls[x].name.toLowerCase().includes(stream.toLowerCase())) {
                             stream = getPlayableURL(sessionStreams.channel_urls[x].self);
+
                             break;
                         }
                     }
-                }else{
-                stream = getPlayableURL(sessionStreams.channel_urls[0].self);
+                } else {
+                    stream = getPlayableURL(sessionStreams.channel_urls[0].self);
                 }
+                console.log("GOT LIVE ");
                 return stream;
                 var file = getFixedArray(test);
                 file = createFile(file);
                 return file;
             }
         }
+    } else {
+        console.log("FOUND NO LIVE ");
+        return null;
     }
-    return null;
     //console.log(firstContent)
 }
 
