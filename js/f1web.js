@@ -657,9 +657,11 @@ function getLive(stream) {
             break;
         }
     }
-    firstContent =jsonHome.objects[0].items[0].content_url.items[0].content_url.self;
-    if (firstContent.includes("/api/event-occurrence/")) {
-        found = true;
+    if (!found) {
+        firstContent = jsonHome.objects[0].items[0].content_url.items[0].content_url.self;
+        if (firstContent.includes("/api/event-occurrence/")) {
+            found = true;
+        }
     }
     if (found) {
         var event = getEventJSON(firstContent);
