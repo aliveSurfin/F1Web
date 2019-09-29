@@ -647,6 +647,8 @@ function getHomepageContent() {
 function getLive(stream) {
     console.log("attempting to get live");
     var jsonHome = getHomepageContent();
+    console.log(jsonHome.objects[0].items[0].content_url.items[0].content_url.self);
+
     for (let x = 0; x < jsonHome.objects[0].items.length; x++) {
         var found = false;
         var firstContent = jsonHome.objects[0].items[x].content_url.self;
@@ -654,6 +656,10 @@ function getLive(stream) {
             found = true;
             break;
         }
+    }
+    firstContent =jsonHome.objects[0].items[0].content_url.items[0].content_url.self;
+    if (firstContent.includes("/api/event-occurrence/")) {
+        found = true;
     }
     if (found) {
         var event = getEventJSON(firstContent);
