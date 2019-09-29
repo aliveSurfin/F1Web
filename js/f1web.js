@@ -241,7 +241,8 @@ function search(year, event, session, stream, f1, file) {
                 if (f1) { // BUGS POSSIBLE // THEY KEEP CHANGING THE NAMES OF SESSIONS
                     if (sessionJSON.name.includes("supercup") ||
                         sessionJSON.name.includes("f2") ||
-                        sessionJSON.name.includes("f3")
+                        sessionJSON.name.includes("f3")||
+                        !sessionJSON.session_name.includes("f1")
 
 
                     ) {
@@ -252,7 +253,7 @@ function search(year, event, session, stream, f1, file) {
                 console.log("found event");
                 break;
             } else {
-                console.log("*skipped :" + sessionJSON.name);
+                console.log("*skipped :" + sessionJSON.session_name);
                 continue;
             }
 
@@ -648,19 +649,13 @@ function getLive(stream) {
     console.log("attempting to get live");
     var jsonHome = getHomepageContent();
     console.log(jsonHome.objects[0].items[0].content_url.items[0].content_url.self);
-
+    var firstContent = "";
     for (let x = 0; x < jsonHome.objects[0].items.length; x++) {
         var found = false;
-        var firstContent = jsonHome.objects[0].items[x].content_url.self;
+        firstContent = jsonHome.objects[0].items[x].content_url.items[0].content_url.self;
         if (firstContent.includes("/api/event-occurrence/")) {
             found = true;
             break;
-        }
-    }
-    if (!found) {
-        firstContent = jsonHome.objects[0].items[0].content_url.items[0].content_url.self;
-        if (firstContent.includes("/api/event-occurrence/")) {
-            found = true;
         }
     }
     if (found) {
@@ -686,6 +681,7 @@ function getLive(stream) {
                     stream = getPlayableURL(sessionStreams.channel_urls[0].self);
                 }
                 console.log("GOT LIVE ");
+                console.log(session.session_name)
                 return stream;
                 var file = getFixedArray(test);
                 file = createFile(file);
