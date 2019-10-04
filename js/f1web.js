@@ -136,9 +136,19 @@ function search(year, event, session, stream, f1, file) {
 
     // searching season
     var seasonJSON = getSeasonsJSON();
-    console.log(seasonJSON[0]);
     if (year === "last") {
-        seasonJSON = seasonJSON[seasonJSON.length - 1];
+        var currentTime = new Date();
+        var year = currentTime.getFullYear();
+        console.log(year);
+        for (var x = 0; x < seasonJSON.length; x++) {
+            if (seasonJSON[x].name.includes(year)) {
+                seasonJSON = seasonJSON[x];
+                break;
+            } else {
+                // handle not found 
+                console.log("season not found");
+            }
+        }
     } else {
         for (var x = 0; x < seasonJSON.length; x++) {
             if (seasonJSON[x].name.includes(year)) {
@@ -153,10 +163,12 @@ function search(year, event, session, stream, f1, file) {
     //console.log("SEASON");
     console.log("Season : " + seasonJSON.name);
     // searching event
+    var eventJSON;
     var now = new Date();
     if (event === "last") {
+        console.log(seasonJSON);
         for (var x = 0; x < seasonJSON.eventoccurrence_urls.length; x++) {
-            var eventJSON = getEventJSON(seasonJSON.eventoccurrence_urls[x]);
+            eventJSON = getEventJSON(seasonJSON.eventoccurrence_urls[x]);
             if (eventJSON.name.includes("Pre-Season")) {
                 continue;
             } else {
@@ -172,7 +184,7 @@ function search(year, event, session, stream, f1, file) {
         }
     } else {
         for (var x = 0; x < seasonJSON.eventoccurrence_urls.length; x++) {
-            var eventJSON = getEventJSON(seasonJSON.eventoccurrence_urls[x]);
+            eventJSON = getEventJSON(seasonJSON.eventoccurrence_urls[x]);
             eventJSON.name = eventJSON.name.toLowerCase();
             eventJSON.official_name = eventJSON.official_name.toLowerCase();
 
@@ -195,20 +207,17 @@ function search(year, event, session, stream, f1, file) {
 
     if (session == "last") {
         console.log("getting last session");
-        for (var x = eventJSON.sessionoccurrence_urls.length - 1; x > -1; x--) {
+        for (var x = eventJSON.sessionoccurrence_urls.length - 1; x != -1; x--) {
             var sessionJSON = getSessionJSON(eventJSON.sessionoccurrence_urls[x]);
             sessionJSON.name = sessionJSON.name.toLowerCase();
-            console.log(sessionJSON.name);
-            if (sessionJSON.slug.includes("high-speed-test")
-
-
+            // console.log(sessionJSON.name);
+            if (sessionJSON.slug.includes("high-speed-test") || sessionJSON.name.includes("high speed test")
             ) {
-
                 console.log("*skipped - no content");
                 continue;
             } else {
                 if (f1 === true) {
-                    // console.log(sessionJSON.session_name);
+
                     if (sessionJSON.name.includes("supercup") ||
                         sessionJSON.name.includes("f2") ||
                         sessionJSON.name.includes("f3")
@@ -218,6 +227,8 @@ function search(year, event, session, stream, f1, file) {
                         console.log("*skipped :" + sessionJSON.name + " | not f1");
                         continue;
                     }
+                } else {
+                    console.log("not skipped : " + sessionJSON.name)
                 }
             }
 
@@ -241,10 +252,7 @@ function search(year, event, session, stream, f1, file) {
                 if (f1) { // BUGS POSSIBLE // THEY KEEP CHANGING THE NAMES OF SESSIONS
                     if (sessionJSON.name.includes("supercup") ||
                         sessionJSON.name.includes("f2") ||
-                        sessionJSON.name.includes("f3")||
-                        !sessionJSON.session_name.includes("f1")
-
-
+                        sessionJSON.name.includes("f3")
                     ) {
                         console.log("*skipped :" + sessionJSON.name + " | not f1");
                         continue;
@@ -686,6 +694,8 @@ function getLive(stream) {
                 var file = getFixedArray(test);
                 file = createFile(file);
                 return file;
+            } else if (i == event.sessionoccurrence_urls.length - 1) {
+                return null;
             }
         }
     } else {
