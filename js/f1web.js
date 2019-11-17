@@ -1,8 +1,10 @@
 var cors2 = "https://cors-anywhere.herokuapp.com/";
 // cors2 = "https://cors.io/";
 // var cors = "https://cors.vaindil.xyz/"; // GET PROXY
-var cors = "https://cors.tensei.moe/"; // GET PROXY
+// var cors = "https://cors.tensei.moe/"; // GET PROXY
+
 var cors2 = "https://cors-f1web.herokuapp.com/"; // POST PROXY
+var cors = cors2;
 
 
 
