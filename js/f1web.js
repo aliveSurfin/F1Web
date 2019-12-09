@@ -1,8 +1,10 @@
 var cors2 = "https://cors-anywhere.herokuapp.com/";
 // cors2 = "https://cors.io/";
 // var cors = "https://cors.vaindil.xyz/"; // GET PROXY
-var cors = "https://cors.tensei.moe/"; // GET PROXY
+// var cors = "https://cors.tensei.moe/"; // GET PROXY
+
 var cors2 = "https://cors-f1web.herokuapp.com/"; // POST PROXY
+var cors = cors2;
 
 
 
@@ -168,21 +170,23 @@ function search(year, event, session, stream, f1, file) {
     var now = new Date();
     if (event === "last") {
         console.log(seasonJSON);
-        for (var x = 0; x < seasonJSON.eventoccurrence_urls.length; x++) {
+        var closestEvent = getDaysBetween(parseDate(getEventJSON(seasonJSON.eventoccurrence_urls[0]).start_date));
+        var closestEventIndex = 0;
+        for (var x = 1; x < seasonJSON.eventoccurrence_urls.length; x++) {
             eventJSON = getEventJSON(seasonJSON.eventoccurrence_urls[x]);
+
             if (eventJSON.name.includes("Pre-Season")) {
                 continue;
             } else {
                 // console.log(eventJSON);
                 var startDate = parseDate(eventJSON.start_date);
-                if (getDaysBetween(startDate) > 0) {
-                    if (x != 0) {
-                        eventJSON = getEventJSON(seasonJSON.eventoccurrence_urls[x - 1]);
-                    }
-                    break;
+                if (getDaysBetween(startDate) > closestEvent ) {
+                    closestEventIndex = x;
+                    closestEvent = getDaysBetween(startDate);
                 }
             }
         }
+        eventJSON = getEventJSON(seasonJSON.eventoccurrence_urls[closestEventIndex]);
     } else {
         for (var x = 0; x < seasonJSON.eventoccurrence_urls.length; x++) {
             eventJSON = getEventJSON(seasonJSON.eventoccurrence_urls[x]);

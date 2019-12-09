@@ -4,6 +4,7 @@ https://alivesurfin.github.io/F1Web/ <br/>
 https://alivesurfin.github.io/F1Web/data.html <br/>
 https://alivesurfin.github.io/F1Web/pitlane.html <br/>
 https://alivesurfin.github.io/F1Web/selector.html <br/>
+https://alivesurfin.github.io/F1Web/f2.html <br/>
 
 
 ## Getting Started
@@ -53,7 +54,7 @@ if not it will return null <br/>
 
 
 ## Acknowledgments
-Basically a js implentation of : https://github.com/SoMuchForSubtlety/F1viewer <br/>
+Basically a js implementation of : https://github.com/SoMuchForSubtlety/F1viewer <br/>
 
 
 
