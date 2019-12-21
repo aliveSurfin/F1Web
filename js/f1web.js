@@ -664,6 +664,9 @@ function getLive(stream) {
     var firstContent = "";
     for (let x = 0; x < jsonHome.objects[0].items.length; x++) {
         var found = false;
+        if(jsonHome.objects[0].items[x].content_url.items[0] == undefined|| jsonHome.objects[0].items[x].content_url.items[0].content_url==undefined){
+            continue
+        }
         firstContent = jsonHome.objects[0].items[x].content_url.items[0].content_url.self;
         if (firstContent.includes("/api/event-occurrence/")) {
             found = true;
