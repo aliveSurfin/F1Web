@@ -661,7 +661,6 @@ function getHomepageContent() {
 function getLive(stream) {
     console.log("attempting to get live");
     var jsonHome = getHomepageContent();
-    console.log(jsonHome.objects[0].items[0].content_url.items[0].content_url.self);
     var firstContent = "";
     for (let x = 0; x < jsonHome.objects[0].items.length; x++) {
         var found = false;
