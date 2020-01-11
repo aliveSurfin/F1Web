@@ -139,12 +139,20 @@ function search(year, event, session, stream, f1, file) {
 
     // searching season
     var seasonJSON = getSeasonsJSON();
+    console.log(seasonJSON);
+    
     if (year === "last") {
         var currentTime = new Date();
         var year = currentTime.getFullYear();
         console.log(year);
         for (var x = 0; x < seasonJSON.length; x++) {
             if (seasonJSON[x].name.includes(year)) {
+                if(!seasonJSON[x].has_content){
+                    if(x!==0){
+                        seasonJSON=seasonJSON[x-1];
+                        break;
+                    }
+                }
                 seasonJSON = seasonJSON[x];
                 break;
             } else {
@@ -163,8 +171,11 @@ function search(year, event, session, stream, f1, file) {
             }
         }
     }
+    
     //console.log("SEASON");
     console.log("Season : " + seasonJSON.name);
+   // console.log(seasonJSON);
+    
     // searching event
     var eventJSON;
     var now = new Date();
