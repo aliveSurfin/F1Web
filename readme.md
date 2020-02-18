@@ -1,5 +1,5 @@
-```html
-<font color="red">NO LONGER WORKING AS PLAYBACK URL REQUIRES AUTH</font>
+```diff
+- NO LONGER WORKING AS PLAYBACK URL REQUIRES AUTH
 ```
 
 # F1 Web Viewer
