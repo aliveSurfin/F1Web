@@ -1,4 +1,4 @@
- ![#f03c15] NO LONGER WORKING AS PLAYBACK URL REQUIRES AUTH `#f03c15`
+ ![#f03c15] (NO LONGER WORKING AS PLAYBACK URL REQUIRES AUTH) `#f03c15`
 
 # F1 Web Viewer
 Javascript file to grab vods & live races from the f1tv api <br/>
