@@ -5,6 +5,7 @@ var cors2 = "https://cors-anywhere.herokuapp.com/";
 
 var cors2 = "https://cors-f1web.herokuapp.com/"; // POST PROXY
 var cors = cors2;
+cors = "https://secret-chamber-30285.herokuapp.com/"
 
 
 
